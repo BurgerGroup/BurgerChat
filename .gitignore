@@ -6,7 +6,7 @@
 
 # Unignore all dirs
 !*/
-
+!*/Dockerfile
 
 .DS_Store
 */.DS_Store
