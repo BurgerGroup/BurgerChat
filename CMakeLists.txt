@@ -54,7 +54,9 @@ include_directories(${PROJECT_SOURCE_DIR}/3rdparty)
 include_directories(${PROJECT_SOURCE_DIR}/3rdparty/Burger)
 include_directories(${PROJECT_SOURCE_DIR}/3rdparty/Burger/thirdparty)
 include_directories(${PROJECT_SOURCE_DIR}/client)
-# include_directories(${PROJECT_SOURCE_DIR}/server)
+include_directories(${PROJECT_SOURCE_DIR}/public)
+include_directories(${PROJECT_SOURCE_DIR}/server)
+
 link_directories(${PROJECT_SOURCE_DIR}/lib)
 
 string(TOUPPER ${CMAKE_BUILD_TYPE} BUILD_TYPE)
@@ -63,5 +65,7 @@ message(STATUS "CXX_FLAGS = " ${CMAKE_CXX_FLAGS} " " ${CMAKE_CXX_FLAGS_${BUILD_T
 add_subdirectory(${PROJECT_SOURCE_DIR}/3rdparty/Burger/burger/base)
 add_subdirectory(${PROJECT_SOURCE_DIR}/3rdparty/Burger/burger/net)
 add_subdirectory(${PROJECT_SOURCE_DIR}/client)
+add_subdirectory(${PROJECT_SOURCE_DIR}/server)
+
 
 
