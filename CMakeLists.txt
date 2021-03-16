@@ -54,7 +54,7 @@ include_directories(${PROJECT_SOURCE_DIR}/3rdparty)
 include_directories(${PROJECT_SOURCE_DIR}/3rdparty/Burger)
 include_directories(${PROJECT_SOURCE_DIR}/3rdparty/Burger/thirdparty)
 # include_directories(${PROJECT_SOURCE_DIR}/client)
-include_directories(${PROJECT_SOURCE_DIR}/public)
+include_directories(${PROJECT_SOURCE_DIR}/common)
 include_directories(${PROJECT_SOURCE_DIR}/server)
 include_directories(${PROJECT_SOURCE_DIR}/model)
 

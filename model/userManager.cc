@@ -52,7 +52,7 @@ User UserManager::query(int64_t id) {
     return User();
 }
 
-bool UserManager::updateState(User user) {
+bool UserManager::updateState(User& user) {
     MySQL::ptr mysql = std::make_shared<MySQL>(params_);
     mysql->connect();
     std::string sql = "update User set state = ? where id = ?";

@@ -21,7 +21,7 @@ BurgerChat : c++ terminal IM based on Burger, ncurses, redis and nginx
 - redis : Cluster Communication
 - nginx : load balance
 
-## Compile and install:
+## Compile
 
 ```
 $ sudo apt install g++ cmake make libboost-dev mysql-server libmysqlclient-dev

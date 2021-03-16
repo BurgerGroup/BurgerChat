@@ -15,7 +15,7 @@ void ChatService::login(const TcpConnectionPtr &conn, json &js, Timestamp time) 
 // 处理注册业务，
 void ChatService::reg(const TcpConnectionPtr &conn, json &js, Timestamp time) {
     std::string name = js["name"];
-    std::string pwd = js["passwd"];
+    std::string pwd = js["password"];
     User user;
     user.setName(name);
     user.setPwd(pwd);

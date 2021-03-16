@@ -18,7 +18,7 @@ public:
     ~UserManager() = default;
     bool add(User &user);
     User query(int64_t id);
-    bool updateState(User user);
+    bool updateState(User& user);
     void resetState();
 private:
     std::map<std::string, std::string> params_;
