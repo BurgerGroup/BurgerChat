@@ -6,6 +6,7 @@
 #include <functional>
 #include "json/json.hpp"
 #include "msg.h"
+#include "userManager.h"
 
 using namespace burger;
 using namespace burger::net;
@@ -32,7 +33,7 @@ private:
     ChatService& operator=(const ChatService&) = delete; 
 private:
 
-
+    UserManager userManager_;
     // 存储消息id和其对应的业务处理方法
     // std::unordered_map<MsgType, MsgHandler, std::hash<int> > idMsgHandlerMap_;
     std::unordered_map<int, MsgHandler> idMsgHandlerMap_;

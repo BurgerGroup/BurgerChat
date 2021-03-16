@@ -12,8 +12,28 @@ void ChatService::login(const TcpConnectionPtr &conn, json &js, Timestamp time) 
     INFO("ChatService::login");
 }
 
+// 处理注册业务，
 void ChatService::reg(const TcpConnectionPtr &conn, json &js, Timestamp time) {
-    INFO("ChatService::reg");
+    std::name = js["name"];
+    std::string pwd = js["passwd"];
+    User user;
+    user.setName(name);
+    user.setPwd(pwd);
+    bool state = userManager_.add(user);
+    if(state) {
+        // register succssfully
+        json response;
+        response["msgid"] = REG_MSG_ACK;
+        response["errno"] = 0;
+        response["id"] = user.getId();
+        conn->send(response.dump());
+    } else {
+        // regsiter failed
+        json response;
+        response["msgid"] = REG_MSG_ACK;
+        response["errno"] = 1;
+        conn->send(response.dump());
+    }
 }
 
 // 获取消息对应的处理器
