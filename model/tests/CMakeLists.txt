@@ -1,0 +1,5 @@
+add_executable(test_user_add test_user_add.cc)
+target_link_libraries(test_user_add chat_model)
+
+add_executable(test_user_query test_user_query.cc)
+target_link_libraries(test_user_query chat_model)

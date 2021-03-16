@@ -4,16 +4,16 @@
 
 UserManager::UserManager(std::string host, std::string user,
                     std::string passwd, std::string dbname) {
-    params["host"] = host;
-    params["user"] = user;
-    params["passwd"] = passwd;
-    params["dbname"] = dbname;
+    params_["host"] = host;
+    params_["user"] = user;
+    params_["passwd"] = passwd;
+    params_["dbname"] = dbname;
 }
 
 bool UserManager::add(User &user)  {
-    MySQL::ptr mysql = std::make_shared<MySQl>(parmas_);
+    MySQL::ptr mysql = std::make_shared<MySQL>(params_);
     mysql->connect();
-    std::string sql = "insert into user (name, password, state) values(?,?,?)";
+    std::string sql = "insert into User (name, password, state) values(?,?,?)";
     auto stmt = mysql->prepare(sql);
     if(!stmt) {
         ERROR("stmt = {} errno = {} errstr = {}", sql, mysql->getErrno(), mysql->getErrStr());
@@ -21,7 +21,7 @@ bool UserManager::add(User &user)  {
     }
     stmt->bind(1, user.getName());
     stmt->bind(2, user.getPwd());
-    stmt->bind(2, user.getState());
+    stmt->bind(3, user.getState());
     if(stmt->execute()) {
         ERROR("stmt = {} errno = {} errstr = {}", sql, mysql->getErrno(), mysql->getErrStr());
         return false;
@@ -30,16 +30,16 @@ bool UserManager::add(User &user)  {
     return true;
 }
 
-User UserManager::query(int id) {
-    MySQL::ptr mysql = std::make_shared<MySQl>(parmas_);
+User UserManager::query(int64_t id) {
+    MySQL::ptr mysql = std::make_shared<MySQL>(params_);
     mysql->connect();
-    std::string sql = "select * from user where id = ?";
+    std::string sql = "select * from User where id = ?";
     auto stmt = mysql->prepare(sql);
     if(!stmt) {
         ERROR("stmt = {} errno = {} errstr = {}", sql, mysql->getErrno(), mysql->getErrStr());
-        return false;
+        return User();
     }
-    stmt->bind(1, user.getId());
+    stmt->bind(1, id);
     auto stmtRes = stmt->query();
     while(stmtRes->next()) {
         User user;
@@ -47,15 +47,15 @@ User UserManager::query(int id) {
         user.setName(stmtRes->getString(1));
         user.setPwd(stmtRes->getString(2));
         user.setState(stmtRes->getString(3));
-        return true;
+        return user;
     }
-    return false;
+    return User();
 }
 
 bool UserManager::updateState(User user) {
-    MySQL::ptr mysql = std::make_shared<MySQl>(parmas_);
+    MySQL::ptr mysql = std::make_shared<MySQL>(params_);
     mysql->connect();
-    std::string sql = "update user set state = ? where id = ?";
+    std::string sql = "update User set state = ? where id = ?";
     auto stmt = mysql->prepare(sql);
     if(!stmt) {
         ERROR("stmt = {} errno = {} errstr = {}", sql, mysql->getErrno(), mysql->getErrStr());
@@ -71,8 +71,8 @@ bool UserManager::updateState(User user) {
 }
 
 void UserManager::resetState() {
-    MySQL::ptr mysql = std::make_shared<MySQl>(parmas_);
+    MySQL::ptr mysql = std::make_shared<MySQL>(params_);
     mysql->connect();
-    std::string sql = "update user set state = 'offline' where state = 'online'";
+    std::string sql = "update User set state = 'offline' where state = 'online'";
     mysql->execute(sql);
 }
