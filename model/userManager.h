@@ -13,6 +13,7 @@ using namespace burger::db;
 // User表的数据操作类
 class UserManager {
 public:
+    // todo : 这里mysql直接读取配置文件
     UserManager(std::string host = "127.0.0.1", std::string user = "root",
                     std::string passwd = "PWD", std::string dbname = "burgerChat");
     ~UserManager() = default;

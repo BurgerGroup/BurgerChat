@@ -22,7 +22,7 @@ void ChatServer::start() {
 
 void ChatServer::onConnection(const TcpConnectionPtr& conn) {
     if(!conn->isConnected()) {
-        // ChatService::getInstance().clientCloseException(conn);
+        ChatService::getInstance().clientCloseException(conn);
         conn->shutdown();
     }
 }
@@ -31,6 +31,7 @@ void ChatServer::onMessage(const TcpConnectionPtr& conn,
                    Buffer& buf,
                    Timestamp receiveTime) {
     std::string msg = buf.retrieveAllAsString();
+    // std::cout << msg << std::endl;  // for test
     json js = json::parse(msg);
     // 达到的目的：完全解耦网络模块的代码和业务模块的代码
     // 通过js["msgid"] 获取=》业务handler=》conn  js  time
