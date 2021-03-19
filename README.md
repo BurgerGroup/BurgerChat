@@ -30,7 +30,9 @@ $ git clone https://github.com/chanchann/BurgerChat.git
 
 $ cd BurgerChat
 
-$ mkdir build && cmake ..
+$ mkdir build && cd build
+
+$ cmake ..
 
 $ make 
 ```
