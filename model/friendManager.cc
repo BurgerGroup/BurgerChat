@@ -11,7 +11,7 @@ FriendManager::FriendManager(std::string host, std::string user,
     params_["dbname"] = dbname;
 }
 
-bool FriendManager::addFriendship(int64_t smaller_id, int64_t greater_id) 
+bool FriendManager::addFriendship(userID smaller_id, userID greater_id) 
 {
     if(smaller_id == greater_id) return false;
     if(smaller_id > greater_id)
@@ -21,7 +21,13 @@ bool FriendManager::addFriendship(int64_t smaller_id, int64_t greater_id)
 
     MySQL::ptr mysql = std::make_shared<MySQL>(params_);
     mysql->connect();
-    std::string sql = "insert into Friend (user1_Id, user2_Id) values(?,?)";
+    
+    std::string sql = "insert into Friend (userid, friendid) values(?,?)";
+    auto stmt = mysql->prepare(sql);
+    if(!stmt) {
+        ERROR("stmt = {} errno = {} errstr = {}", sql, mysql->getErrno(), mysql->getErrStr());
+        return false;
+    }
     stmt->bind(1, smaller_id);
     stmt->bind(2, greater_id);
     if(stmt->execute()) {
@@ -36,7 +42,7 @@ bool FriendManager::addFriendship(const User& user_1, const User& user_2)
     return addFriendship(user_1.getId(), user_2.getId());
 }
 
-bool FriendManager::releaseFriendship(int64_t smaller_id, int64_t greater_id) 
+bool FriendManager::releaseFriendship(userID smaller_id, userID greater_id) 
 {
     if(smaller_id == greater_id) return false;
     if(smaller_id > greater_id)
@@ -46,7 +52,12 @@ bool FriendManager::releaseFriendship(int64_t smaller_id, int64_t greater_id)
 
     MySQL::ptr mysql = std::make_shared<MySQL>(params_);
     mysql->connect();
-    std::string sql = "delete from Friend where user1_Id = ? and user2_Id = ?";
+    std::string sql = "delete from Friend where userid = ? and friendid = ?";
+    auto stmt = mysql->prepare(sql);
+    if(!stmt) {
+        ERROR("stmt = {} errno = {} errstr = {}", sql, mysql->getErrno(), mysql->getErrStr());
+        return false;
+    }
     stmt->bind(1, smaller_id);
     stmt->bind(2, greater_id);
     if(stmt->execute()) {

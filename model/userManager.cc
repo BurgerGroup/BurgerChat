@@ -1,7 +1,7 @@
 #include "userManager.h"
 
 // todo : 优化 ：抽个类出来
-
+using namespace burger::db;
 UserManager::UserManager(std::string host, std::string user,
                     std::string passwd, std::string dbname) {
     params_["host"] = host;
@@ -30,7 +30,7 @@ bool UserManager::add(User &user)  {
     return true;
 }
 
-User UserManager::query(int64_t id) {
+User UserManager::query(userID id) {
     MySQL::ptr mysql = std::make_shared<MySQL>(params_);
     mysql->connect();
     std::string sql = "select * from User where id = ?";
@@ -43,7 +43,7 @@ User UserManager::query(int64_t id) {
     auto stmtRes = stmt->query();
     while(stmtRes->next()) {
         User user;
-        user.setId(stmtRes->getInt32(0));
+        user.setId(stmtRes->getInt64(0));
         user.setName(stmtRes->getString(1));
         user.setPwd(stmtRes->getString(2));
         user.setState(stmtRes->getString(3));

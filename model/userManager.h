@@ -18,7 +18,7 @@ public:
                     std::string passwd = "PWD", std::string dbname = "burgerChat");
     ~UserManager() = default;
     bool add(User &user);
-    User query(int64_t id);
+    User query(userID id);
     bool updateState(User& user);
     void resetState();
 private:

@@ -5,8 +5,7 @@ project(BurgerChat C CXX)
 if(NOT CMAKE_BUILD_TYPE)
     set(CMAKE_BUILD_TYPE "Debug")
 endif()
-
-set(EXECUTABLE_OUTPUT_PATH ${PROJECT_BINARY_DIR})
+set(EXECUTABLE_OUTPUT_PATH ${PROJECT_BINARY_DIR}/bin)
 set(LIBRARY_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/lib)
 
 set(CXX_FLAGS
@@ -57,6 +56,7 @@ include_directories(${PROJECT_SOURCE_DIR}/client)
 include_directories(${PROJECT_SOURCE_DIR}/common)
 include_directories(${PROJECT_SOURCE_DIR}/server)
 include_directories(${PROJECT_SOURCE_DIR}/model)
+include_directories(/usr/include)
 
 link_directories(${PROJECT_SOURCE_DIR}/lib)
 

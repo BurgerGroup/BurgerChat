@@ -1,5 +1,8 @@
 set(model_SRCS
     userManager.cc
+    groupManager.cc
+    groupUserManager.cc
+    friendManager.cc
   )
 
 add_library(chat_model ${model_SRCS})

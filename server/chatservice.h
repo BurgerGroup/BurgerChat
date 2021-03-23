@@ -25,7 +25,7 @@ public:
     void login(const TcpConnectionPtr &conn, json &js, Timestamp time);
     // 处理注册业务
     void reg(const TcpConnectionPtr &conn, json &js, Timestamp time);
-        // 一对一聊天业务
+    // 一对一聊天业务
     void oneChat(const TcpConnectionPtr &conn, json &js, Timestamp time);
     // 添加好友业务
     void addFriend(const TcpConnectionPtr &conn, json &js, Timestamp time);
