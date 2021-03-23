@@ -13,13 +13,16 @@ void ChatClient::start() {
     for (;;) {
         std::cout << ">> 1. login 2. signup 3. exit <<" << std::endl; 
         std::cout << ">> ";
-        int choice = 0;
-        std::cin >> choice;
-        std::cin.get();
-        while (std::cin.fail()) {
-            std::cin.clear();
-            std::cin.ignore();
-        }
+        // int choice = 0;
+        // std::cin >> choice;
+        // std::cin.get();
+        // while (std::cin.fail()) {
+        //     std::cin.clear();
+        //     std::cin.ignore();
+        // }
+        std::string input;
+        std::getline(std::cin, input);
+        int choice = atoi(input.c_str());
         // todo : 解决缓冲区问题
         switch (choice) {
             case 1: {
