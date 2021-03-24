@@ -71,3 +71,28 @@ bool FriendManager::releaseFriendship(const User& user_1, const User& user_2)
 {
     return releaseFriendship(user_1.getId(), user_2.getId());
 }
+
+bool FriendManager::isFriend(userID smaller_id, userID greater_id) 
+{
+    if(smaller_id == greater_id) return true; // 自己是自己的好友
+    if(smaller_id > greater_id)
+    {
+        std::swap(smaller_id, greater_id);
+    }
+
+    MySQL::ptr mysql = std::make_shared<MySQL>(params_);
+    mysql->connect();
+    std::string sql = "select * from Friend where userid = ? and friendid = ?";
+    auto stmt = mysql->prepare(sql);
+    if(!stmt) {
+        ERROR("stmt = {} errno = {} errstr = {}", sql, mysql->getErrno(), mysql->getErrStr());
+        return false;
+    }
+    stmt->bind(1, smaller_id);
+    stmt->bind(2, greater_id);
+    auto stmtRes = stmt->query();
+    while(stmtRes->next()) {
+        return true;
+    }
+    return false;
+}

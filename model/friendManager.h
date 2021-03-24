@@ -23,6 +23,8 @@ public:
     bool releaseFriendship(userID smaller_id, userID greater_id);
     bool releaseFriendship(const User& user_1, const User& user_2);
 
+    bool isFriend(userID smaller_id, userID greater_id);
+
 private:
     std::map<std::string, std::string> params_;
 };
