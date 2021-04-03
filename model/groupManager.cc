@@ -1,16 +1,14 @@
 #include "groupManager.h"
 using namespace burger::db;
 GroupManager::GroupManager(std::string host, std::string user,
-                    std::string passwd, std::string dbname) 
-{
+                    std::string passwd, std::string dbname) {
     params_["host"] = host;
     params_["user"] = user;
     params_["passwd"] = passwd;
     params_["dbname"] = dbname;
 }
 
-bool GroupManager::add(Group &group) 
-{
+bool GroupManager::add(Group &group) {
     MySQL::ptr mysql = std::make_shared<MySQL>(params_);
     mysql->connect();
     std::string sql = "insert into AllGroup (groupName, groupDesc) values(?,?)";

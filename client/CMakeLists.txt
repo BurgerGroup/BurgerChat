@@ -1,6 +1,8 @@
 set(client_SRCS
     # interface.cc
     chatClient.cc
+    cmdLine.cc
+    winManager.cc
     main.cc
 )
 

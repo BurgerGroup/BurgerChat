@@ -43,6 +43,7 @@ User UserManager::query(userID id) {
     auto stmtRes = stmt->query();
     while(stmtRes->next()) {
         User user;
+        std::cout << "stmt getint " << stmtRes->getInt64(0) << std::endl;
         user.setId(stmtRes->getInt64(0));
         user.setName(stmtRes->getString(1));
         user.setPwd(stmtRes->getString(2));

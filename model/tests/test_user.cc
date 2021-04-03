@@ -31,12 +31,7 @@ void test_query_and_state() {
     std::cout << user1.getState() << std::endl;
 }
 
-
-
 int main() {
-    // test_add();
+    test_add();
     test_query_and_state();
-
-
 }
-

@@ -3,32 +3,42 @@
 
 #include <burger/net/EventLoop.h>
 #include <burger/net/TcpClient.h>
+#include <burger/base/Util.h>
+
 #include <iostream>
 #include <mutex>
+#include <vector>
 #include "json/json.hpp"
 #include "msg.h"
+#include "winManager.h"
+#include "info.h"
+
 using json = nlohmann::json;
 using namespace burger;
 using namespace burger::net;
 
+class WinManager;
+class Info;
 class ChatClient {
 public:
     ChatClient(EventLoop* loop, const InetAddress& serverAddr);
     ~ChatClient() = default;
-    void connect() { client_.connect(); }
+    // todo for safety?
+    TcpClient* getClient() { return &client_; }
     void start();
+    void send(const std::string& msg);
 private:
     void onConnection(const TcpConnectionPtr& conn);
     void onMessage(const TcpConnectionPtr& conn, Buffer& buf, Timestamp time);
-    void send(const std::string& msg);
-    void signup();
     void signupAck(const json& response);
-    void login();
 private:
     EventLoop* loop_;
     TcpClient client_;
     std::mutex mutex_;
     TcpConnectionPtr connection_;
+    std::unique_ptr<WinManager> winManager_;
+    std::unique_ptr<Info> info_;
+    
 };
 
 

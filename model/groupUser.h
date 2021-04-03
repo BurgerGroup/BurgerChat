@@ -1,12 +1,14 @@
-#ifndef __GROUPUSER_H__
-#define __GROUPUSER_H__
+#ifndef GROUPUSER_H
+#define GROUPUSER_H
+
+
 #include "user.h"
 #include "group.h"
 #include <string>
  
 typedef std::pair<groupID, userID> groupUserID;
-class GroupUser
-{
+
+class GroupUser {
 public:
     GroupUser(groupID groupid = -1, userID userid = -1, const std::string& role = "normal")
         : groupid_(groupid),
@@ -30,4 +32,5 @@ private:
     std::string role_;
 };
 
-#endif // __GROUPUSER_H__
+
+#endif // GROUPUSER_H

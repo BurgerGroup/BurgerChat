@@ -1,10 +1,7 @@
 #include "friendManager.h"
-using namespace burger;
-using namespace burger::db;
 
 FriendManager::FriendManager(std::string host, std::string user,
-                    std::string passwd, std::string dbname) 
-{
+                    std::string passwd, std::string dbname) {
     params_["host"] = host;
     params_["user"] = user;
     params_["passwd"] = passwd;

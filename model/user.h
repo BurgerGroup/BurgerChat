@@ -3,15 +3,15 @@
 
 #include <string>
 
-typedef int64_t userID;
+using userID = int64_t;
 // User表的ORM类
 class User {
 public:
     User(std::string name = "", std::string pwd = "", std::string state = "offline", userID id = -1)
-    : name_(name),
-    password_(pwd),
-    state_(state),
-    id_(id){
+        : name_(name),
+        password_(pwd),
+        state_(state),
+        id_(id) {
     }
     ~User() = default;
     void setId(userID id) { id_ = id; }

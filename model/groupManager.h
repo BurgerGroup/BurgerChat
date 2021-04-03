@@ -1,5 +1,6 @@
-#ifndef __GROUPMANAGER_H__
-#define __GROUPMANAGER_H__
+#ifndef GROUPMANAGER_H
+#define GROUPMANAGER_H
+
 #include "group.h"
 #include <map>
 #include <string>
@@ -7,8 +8,7 @@
 #include <burger/db/DB.h>
 
 // 对群组表的操作
-class GroupManager
-{
+class GroupManager {
 public:
     GroupManager(std::string host = "127.0.0.1", std::string user = "root",
                     std::string passwd = "PWD", std::string dbname = "burgerChat");
@@ -23,4 +23,5 @@ private:
     std::map<std::string, std::string> params_;
 };
 
-#endif // __GROUPMANAGER_H__
+
+#endif // GROUPMANAGER_H

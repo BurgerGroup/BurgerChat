@@ -41,6 +41,7 @@ void ChatService::login(const TcpConnectionPtr &conn, json &js, Timestamp time) 
         }
 
     } else {
+        std::cout << user.getId() <<  " " << user.getPwd() << std::endl; // for test
         // login failed , 该用户不存在，用户存在但是密码错误
         // todo : 这里可以做的更细致
         json response;
@@ -77,7 +78,26 @@ void ChatService::reg(const TcpConnectionPtr &conn, json &js, Timestamp time) {
 }
 
 void ChatService::oneChat(const TcpConnectionPtr &conn, json &js, Timestamp time) {
-    INFO("one chat");
+    int toid = js["to"].get<int>();
+    {
+        std::lock_guard<std::mutex> lock(mutex_);
+        auto it = idUserConnMap_.find(toid);
+        if(it != idUserConnMap_.end()) {
+            // toid在线，转发消息   服务器主动推送消息给toid用户(中转)
+            // std::cout << js.dump() << std::endl; // for test
+            it->second->send(js.dump());
+            return;
+        }
+    }
+    // 查询toid是否在线 
+    // User user = userManager_.query(toid);
+    // if (user.getState() == "online") {
+        // redis_.publish(toid, js.dump());
+    //     return;
+    // }
+
+    // toid不在线，存储离线消息
+    // offlineMsgModel_.insert(toid, js.dump());
 }
 
 void ChatService::addFriend(const TcpConnectionPtr &conn, json &js, Timestamp time) {

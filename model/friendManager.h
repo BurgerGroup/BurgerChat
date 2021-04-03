@@ -1,5 +1,6 @@
-#ifndef __FRIENDMANAGER_H__
-#define __FRIENDMANAGER_H__
+#ifndef FRIENDMANAGER_H
+#define FRIENDMANAGER_H
+
 #include "user.h"
 #include <map>
 #include <string>
@@ -9,9 +10,7 @@
 using namespace burger;
 using namespace burger::db;
 
-
-class FriendManager
-{
+class FriendManager {
 public:
     FriendManager(std::string host = "127.0.0.1", std::string user = "root",
                     std::string passwd = "PWD", std::string dbname = "burgerChat");
@@ -29,4 +28,5 @@ private:
     std::map<std::string, std::string> params_;
 };
 
-#endif // __FRIENDMANAGER_H__
+
+#endif // FRIENDMANAGER_H
