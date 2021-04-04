@@ -3,6 +3,7 @@ set(model_SRCS
     groupManager.cc
     groupUserManager.cc
     friendManager.cc
+    offlineMsgManager.cc
   )
 
 add_library(chat_model ${model_SRCS})

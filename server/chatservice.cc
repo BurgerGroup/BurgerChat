@@ -10,9 +10,11 @@ ChatService& ChatService::getInstance() {
 
 // id pwd pwd
 void ChatService::login(const TcpConnectionPtr &conn, json &js, Timestamp time) {
-    int id = js["id"].get<int>();
+    UserId id = js["id"].get<UserId>();
+    std::cout << id << std::endl;
     std::string pwd = js["password"];
     User user = userManager_.query(id);
+
     if(user.getId() == id && user.getPwd() == pwd) {
         if(user.getState() == "online") {
             // 该用户已经登录，不允许重复登录 
@@ -26,9 +28,11 @@ void ChatService::login(const TcpConnectionPtr &conn, json &js, Timestamp time) 
             // login successfully
             {
                 // STL 都未考虑线程安全， onMessage在多线程环境中
+                // 登录成功，记录用户连接信息
                 std::lock_guard<std::mutex> lock(mutex_);
                 idUserConnMap_.insert({id, conn});
             }
+            // 登录成功，更新用户状态信息 state offline=>online
             user.setState("online");
             userManager_.updateState(user);
 
@@ -37,6 +41,18 @@ void ChatService::login(const TcpConnectionPtr &conn, json &js, Timestamp time) 
             response["errno"] = 0;
             response["id"] = user.getId();
             response["name"] = user.getName();  // todo: 这些应该再客户端本地存储
+
+            // 查询该用户是否有离线消息
+            std::vector<std::string> vec = offlineManager_.query(id);
+            for(auto v: vec) {
+                std::cout << v << std::endl;
+            }
+            if(!vec.empty()) {
+                response["offlinemsg"] = vec;
+                // 读取该用户的离线消息后，把该用户的所有离线消息删除掉
+                offlineManager_.remove(id);
+            }
+            std::cout << response.dump() << std::endl;
             conn->send(response.dump());
         }
 
@@ -97,11 +113,16 @@ void ChatService::oneChat(const TcpConnectionPtr &conn, json &js, Timestamp time
     // }
 
     // toid不在线，存储离线消息
-    // offlineMsgModel_.insert(toid, js.dump());
+    offlineManager_.add(toid, js.dump());
 }
 
+
 void ChatService::addFriend(const TcpConnectionPtr &conn, json &js, Timestamp time) {
-    INFO("add friend");    
+    UserId userid = js["id"].get<UserId>();
+    UserId friendid = js["friendid"].get<UserId>();
+
+    // 存储好友信息
+    friendManager_.addFriendship(userid, friendid);
 }
 
 void ChatService::createGroup(const TcpConnectionPtr &conn, json &js, Timestamp time) {
@@ -146,7 +167,6 @@ void ChatService::reset() {
     // 把online状态的用户，设置成offline
     userManager_.resetState();
 }
-
 
 // 获取消息对应的处理器
 MsgHandler ChatService::getHandler(int msgid) {

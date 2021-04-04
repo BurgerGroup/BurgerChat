@@ -5,9 +5,12 @@
 #include <unordered_map>
 #include <functional>
 #include <mutex>
+#include <vector>
 #include "json/json.hpp"
 #include "msg.h"
 #include "userManager.h"
+#include "OfflineMsgManager.h"
+#include "friendManager.h"
 
 using namespace burger;
 using namespace burger::net;
@@ -51,6 +54,8 @@ private:
 private:
 
     UserManager userManager_;
+    OfflineMsgManager offlineManager_;
+    FriendManager friendManager_;
     // 存储消息id和其对应的业务处理方法
     // std::unordered_map<MsgType, MsgHandler, std::hash<int> > idMsgHandlerMap_;
     std::unordered_map<int, MsgHandler> idMsgHandlerMap_;

@@ -30,7 +30,7 @@ bool UserManager::add(User &user)  {
     return true;
 }
 
-User UserManager::query(userID id) {
+User UserManager::query(UserId id) {
     MySQL::ptr mysql = std::make_shared<MySQL>(params_);
     mysql->connect();
     std::string sql = "select * from User where id = ?";
@@ -43,7 +43,6 @@ User UserManager::query(userID id) {
     auto stmtRes = stmt->query();
     while(stmtRes->next()) {
         User user;
-        std::cout << "stmt getint " << stmtRes->getInt64(0) << std::endl;
         user.setId(stmtRes->getInt64(0));
         user.setName(stmtRes->getString(1));
         user.setPwd(stmtRes->getString(2));

@@ -24,6 +24,10 @@ public:
 
     bool isFriend(userID smaller_id, userID greater_id);
 
+    // 返回用户好友列表
+    // todo : 保存到本地？
+    std::vector<User> query(UserId userid);
+
 private:
     std::map<std::string, std::string> params_;
 };
