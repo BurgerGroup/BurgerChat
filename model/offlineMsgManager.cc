@@ -57,9 +57,7 @@ std::vector<std::string> OfflineMsgManager::query(UserId userid) {
     stmt->bind(1, userid);
     auto stmtRes = stmt->query();
     while(stmtRes->next()) {
-        std::cout << stmtRes->getString(0) << std::endl;
-        vec.push_back(stmtRes->getString(0));
-        // vec.emplace_back(stmtRes->getString(1));
+        vec.emplace_back(stmtRes->getString(0));
     }
     return vec;
 }

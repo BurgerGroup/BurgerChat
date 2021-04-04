@@ -11,7 +11,6 @@ ChatService& ChatService::getInstance() {
 // id pwd pwd
 void ChatService::login(const TcpConnectionPtr &conn, json &js, Timestamp time) {
     UserId id = js["id"].get<UserId>();
-    std::cout << id << std::endl;
     std::string pwd = js["password"];
     User user = userManager_.query(id);
 
@@ -43,19 +42,29 @@ void ChatService::login(const TcpConnectionPtr &conn, json &js, Timestamp time) 
             response["name"] = user.getName();  // todo: 这些应该再客户端本地存储
 
             // 查询该用户是否有离线消息
-            std::vector<std::string> vec = offlineManager_.query(id);
-            for(auto v: vec) {
-                std::cout << v << std::endl;
-            }
-            if(!vec.empty()) {
-                response["offlinemsg"] = vec;
+            std::vector<std::string> offlineList = offlineManager_.query(id);
+            if(!offlineList.empty()) {
+                response["offlinemsg"] = offlineList;
                 // 读取该用户的离线消息后，把该用户的所有离线消息删除掉
                 offlineManager_.remove(id);
             }
-            std::cout << response.dump() << std::endl;
+            
+            // 查询该用户的好友信息并返回
+            std::vector<User> friendList = friendManager_.query(id);
+            if (!friendList.empty()) {
+                std::vector<std::string> frinds;
+                for (User &f : friendList) {
+                    json friendJs;
+                    friendJs["id"] = f.getId();
+                    friendJs["name"] = f.getName();
+                    friendJs["state"] = f.getState();
+                    frinds.emplace_back(friendJs.dump());
+                }
+                response["friends"] = frinds;
+            }
+
             conn->send(response.dump());
         }
-
     } else {
         std::cout << user.getId() <<  " " << user.getPwd() << std::endl; // for test
         // login failed , 该用户不存在，用户存在但是密码错误
@@ -105,13 +114,6 @@ void ChatService::oneChat(const TcpConnectionPtr &conn, json &js, Timestamp time
             return;
         }
     }
-    // 查询toid是否在线 
-    // User user = userManager_.query(toid);
-    // if (user.getState() == "online") {
-        // redis_.publish(toid, js.dump());
-    //     return;
-    // }
-
     // toid不在线，存储离线消息
     offlineManager_.add(toid, js.dump());
 }

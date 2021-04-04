@@ -76,3 +76,12 @@ select * from User; 查看是否变offline
 
 ## 添加好友测试
 
+先登录一个账户
+
+{"msgid":1, "id":3, "password":"123123"}
+
+然后添加好友
+
+{"msgid":7, "id":3, "friendid":2}
+
+然后 select * from Friend;
