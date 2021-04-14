@@ -19,7 +19,7 @@ private:
     void onConnection(const TcpConnectionPtr&);
 
     void onMessage(const TcpConnectionPtr&,
-                   Buffer&,
+                   IBuffer&,
                    Timestamp);
 private:
     TcpServer server_; 

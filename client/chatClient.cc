@@ -28,7 +28,7 @@ void ChatClient::onConnection(const TcpConnectionPtr& conn) {
     }
 }
 
-void ChatClient::onMessage(const TcpConnectionPtr& conn, Buffer& buf, Timestamp time) {
+void ChatClient::onMessage(const TcpConnectionPtr& conn, IBuffer& buf, Timestamp time) {
     std::string msg = buf.retrieveAllAsString();
     json response = json::parse(msg);
     if(response["msgid"].get<int>() == REG_MSG_ACK) {

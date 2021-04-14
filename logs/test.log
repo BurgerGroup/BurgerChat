@@ -1,0 +1,8 @@
+2021-04-14 08:07:17 [trace] [tid : 5405] [EventLoop.cc : 44 <Log>] Logger setup
+2021-04-14 08:07:21 [info] [tid : 5405] [TcpServer.cc : 57 <newConnection>] TcpServer::newConnection [ChatServer] - new connection [ChatServer-127.0.0.1:8888#1] from 127.0.0.1:46698 
+2021-04-14 08:07:22 [info] [tid : 5405] [TcpServer.cc : 79 <removeConnectionInLoop>] TcpServer::removeConnectionInLoop [ChatServer] - connection ChatServer-127.0.0.1:8888#1
+2021-04-14 08:07:22 [critical] [tid : 5405] [EventLoop.cc : 233 <abortNotInLoopThread>] EventLoop::abortNotInLoopThread - EventLoop 0x7fb441e00b40 was         created in threadId_ = 5411, and current id = 5405 ...
+2021-04-14 08:17:21 [trace] [tid : 5546] [EventLoop.cc : 44 <Log>] Logger setup
+2021-04-14 08:17:26 [info] [tid : 5546] [TcpServer.cc : 57 <newConnection>] TcpServer::newConnection [ChatServer] - new connection [ChatServer-127.0.0.1:8888#1] from 127.0.0.1:46700 
+2021-04-14 08:17:27 [info] [tid : 5546] [TcpServer.cc : 79 <removeConnectionInLoop>] TcpServer::removeConnectionInLoop [ChatServer] - connection ChatServer-127.0.0.1:8888#1
+2021-04-14 08:17:27 [critical] [tid : 5546] [EventLoop.cc : 233 <abortNotInLoopThread>] EventLoop::abortNotInLoopThread - EventLoop 0x7f0799772b40 was         created in threadId_ = 5552, and current id = 5546 ...

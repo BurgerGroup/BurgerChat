@@ -29,7 +29,7 @@ public:
     void send(const std::string& msg);
 private:
     void onConnection(const TcpConnectionPtr& conn);
-    void onMessage(const TcpConnectionPtr& conn, Buffer& buf, Timestamp time);
+    void onMessage(const TcpConnectionPtr& conn, IBuffer& buf, Timestamp time);
     void signupAck(const json& response);
 private:
     EventLoop* loop_;

@@ -28,7 +28,7 @@ void ChatServer::onConnection(const TcpConnectionPtr& conn) {
 }
 
 void ChatServer::onMessage(const TcpConnectionPtr& conn,
-                   Buffer& buf,
+                   IBuffer& buf,
                    Timestamp receiveTime) {
     std::string msg = buf.retrieveAllAsString();
     // std::cout << msg << std::endl;  // for test

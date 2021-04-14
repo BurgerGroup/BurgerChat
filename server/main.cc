@@ -11,7 +11,8 @@ void resetHandler(int) {
 
 
 int main(int argc, char* argv[]) {
-    LOGGER;
+    LOGGER();
+    spdlog::set_level(spdlog::level::trace);
     signal(SIGINT, resetHandler);
     EventLoop loop;
     InetAddress addr("127.0.0.1", 8888);
