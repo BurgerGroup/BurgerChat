@@ -7,12 +7,12 @@
 using namespace burger;
 using namespace burger::db;
 
-UserManager um("127.0.0.1", "root", "123");
-FriendManager fm("127.0.0.1", "root", "123");
+UserManager um("127.0.0.1", "root", "PWD");
+FriendManager fm("127.0.0.1", "root", "PWD");
 
 void test_friend_add() {
-    User u1 = um.query(1);
-    User u2 = um.query(2);
+    User u1 = um.query(2);
+    User u2 = um.query(3);
 
     std::cout << u1.getName() << ", " << u2.getName() << std::endl;
     
@@ -44,6 +44,6 @@ void test_friend_release() {
 
 int main() {
     test_friend_add();
-    test_friend_release();
+    // test_friend_release();
     return 0;
 }

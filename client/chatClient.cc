@@ -33,7 +33,11 @@ void ChatClient::onMessage(const TcpConnectionPtr& conn, IBuffer& buf, Timestamp
     json response = json::parse(msg);
     if(response["msgid"].get<int>() == REG_MSG_ACK) {
         signupAck(response);
-    } else {
+    } 
+    else if(response["msgid"].get<int>() == LOGIN_MSG_ACK) {
+        loginAck(response);
+    }
+    else {
         std::cout << "other msg type" << std::endl;
     }
 }
@@ -59,6 +63,20 @@ void ChatClient::signupAck(const json& response) {
     std::cout << "Sign up success, your user ID is: " << response["id"]
         << ", do not forget it!" << std::endl;
         winManager_->login();
+    }
+}
+
+void ChatClient::loginAck(const json& response) {
+    if (response["errno"].get<int>() != 0) {
+        // login failed
+        // todo : 错误原因可以再细化一下吗？
+        std::string errmsg = response["errmsg"];
+        std::cout << errmsg << "Login failed!, Try again..." << std::endl;
+        winManager_->login();
+    } else {
+    // Log in succeed
+    std::cout << "Login success!" << std::endl;
+        winManager_->mainMenu();
     }
 }
 

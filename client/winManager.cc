@@ -1,12 +1,13 @@
 #include "winManager.h"
 #include "chatClient.h"
+#include "cmdLine.h"
 
 WinManager::WinManager(ChatClient* chatClient)
     : chatClient_(chatClient)  {
 }
 
 void WinManager::start() {
-    for (;;) {
+    // for (;;) {
         std::cout << ">> 1. login 2. signup 3. exit <<" << std::endl; 
         std::cout << ">> ";
         std::string input;
@@ -33,7 +34,7 @@ void WinManager::start() {
                 break;
             }
         }
-  }
+  // }
 }
 
 void WinManager::signup() {
@@ -68,7 +69,7 @@ void WinManager::login() {
             std::cin.ignore();
         }
         if (id <= 0) {
-            std::cout << "Inlvalid ID" << std::endl;
+            std::cout << "Invalid ID" << std::endl;
             continue;
         }
         break;
@@ -76,12 +77,13 @@ void WinManager::login() {
     std::cout << "Password: ";
     std::cin.getline(pwd, 50);
 
+    json js;
+    js["msgid"] = LOGIN_MSG;
+    js["id"] = id;
+    js["password"] = pwd;
+    std::string request = js.dump();
 
-    // json js;
-    // js["msgid"] = LOGIN_MSG;
-    // js["id"] = id;
-    // js["password"] = pwd;
-    // string request = js.dump();
+    chatClient_->send(request);
 
     // int len = send(clientfd, request.c_str(), strlen(request.c_str()) + 1, 0);
     // if (len == -1) {
@@ -105,5 +107,34 @@ void WinManager::login() {
     //     }
     //     }
     // }    
+}
+
+void WinManager::mainMenu() {
+    std::cout << ">> Main Menu <<" << std::endl; 
+    std::cout << ">> Enter 'help' to get help <<" << std::endl; 
+    for (;;) {
+        std::cout << ">> Enter Your Choice <<" << std::endl; 
+        std::string input;
+        std::string action;
+        std::string content;
+        std::getline(std::cin, input);
+
+        size_t end = input.find(':');
+        if(end == input.npos) {
+            action = input;
+        }
+        else {
+            action = input.substr(0, end);
+            content = input.substr(end + 1, input.size() - end);
+        }   
+
+        if(CmdHandler::commandMap.find(action) == CmdHandler::commandMap.end()) {
+            std::cout << ">> Invalid input!!!! <<" << std::endl; 
+        }
+        else {
+            auto func = CmdHandler::commandHandlerMap[action];
+            func(chatClient_, std::move(content));
+        }
+    }
 }
 

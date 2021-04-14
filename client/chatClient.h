@@ -27,17 +27,21 @@ public:
     TcpClient* getClient() { return &client_; }
     void start();
     void send(const std::string& msg);
+    std::shared_ptr<Info> getInfo() { return info_;}
+
 private:
     void onConnection(const TcpConnectionPtr& conn);
     void onMessage(const TcpConnectionPtr& conn, IBuffer& buf, Timestamp time);
     void signupAck(const json& response);
+    void loginAck(const json& response);
 private:
     EventLoop* loop_;
     TcpClient client_;
     std::mutex mutex_;
     TcpConnectionPtr connection_;
     std::unique_ptr<WinManager> winManager_;
-    std::unique_ptr<Info> info_;
+    // std::unique_ptr<Info> info_;
+    std::shared_ptr<Info> info_;
     
 };
 

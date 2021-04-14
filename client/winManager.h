@@ -13,6 +13,7 @@ public:
     void start();
     void signup();
     void login();
+    void mainMenu();
 private:
     ChatClient* chatClient_;
 };
