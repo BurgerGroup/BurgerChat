@@ -45,8 +45,10 @@ void ChatClient::onMessage(const TcpConnectionPtr& conn, IBuffer& buf, Timestamp
 void ChatClient::send(const std::string& msg) {
     std::lock_guard<std::mutex> lock(mutex_);
     if(connection_) {
+        std::cout << "123" << std::endl;
         connection_->send(msg);
     } else {
+        std::cout << "connection deson't exist" << std::endl;
         ERROR("connection deson't exist");
     }
 }

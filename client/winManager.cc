@@ -82,7 +82,6 @@ void WinManager::login() {
     js["id"] = id;
     js["password"] = pwd;
     std::string request = js.dump();
-
     chatClient_->send(request);
 
     // int len = send(clientfd, request.c_str(), strlen(request.c_str()) + 1, 0);

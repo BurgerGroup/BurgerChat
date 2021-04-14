@@ -66,7 +66,7 @@ message(STATUS "CXX_FLAGS = " ${CMAKE_CXX_FLAGS} " " ${CMAKE_CXX_FLAGS_${BUILD_T
 add_subdirectory(${PROJECT_SOURCE_DIR}/3rdparty/Burger/burger/base)
 add_subdirectory(${PROJECT_SOURCE_DIR}/3rdparty/Burger/burger/net)
 add_subdirectory(${PROJECT_SOURCE_DIR}/3rdparty/Burger/burger/db)
-# add_subdirectory(${PROJECT_SOURCE_DIR}/3rdparty/Burger/thirdparty/yaml-cpp)
+add_subdirectory(${PROJECT_SOURCE_DIR}/3rdparty/Burger/thirdparty/googletest)
 add_subdirectory(${PROJECT_SOURCE_DIR}/client)
 add_subdirectory(${PROJECT_SOURCE_DIR}/server)
 add_subdirectory(${PROJECT_SOURCE_DIR}/model)
