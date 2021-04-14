@@ -17,6 +17,16 @@ https://stackoverflow.com/questions/11965328/debugging-ncurses-application-with-
 
 https://stackoverflow.com/questions/9617364/using-cgdb-for-a-ncurses-c-application
 
+## 一对一聊天
+
+```
+msgid 
+id : 1 # myid
+from : "frank"
+to : 3 # friend's id
+msg : "xxx"
+```
+
 ## todo 
 
 1. database 交互需要思考下

@@ -1,5 +1,6 @@
-#ifndef __FRIENDMANAGER_H__
-#define __FRIENDMANAGER_H__
+#ifndef FRIENDMANAGER_H
+#define FRIENDMANAGER_H
+
 #include "user.h"
 #include <map>
 #include <string>
@@ -9,24 +10,27 @@
 using namespace burger;
 using namespace burger::db;
 
-
-class FriendManager
-{
+class FriendManager {
 public:
     FriendManager(std::string host = "127.0.0.1", std::string user = "root",
                     std::string passwd = "PWD", std::string dbname = "burgerChat");
     ~FriendManager() = default;
 
-    bool addFriendship(userID smaller_id, userID greater_id);
+    bool addFriendship(UserId smaller_id, UserId greater_id);
     bool addFriendship(const User& user_1, const User& user_2);
 
-    bool releaseFriendship(userID smaller_id, userID greater_id);
+    bool releaseFriendship(UserId smaller_id, UserId greater_id);
     bool releaseFriendship(const User& user_1, const User& user_2);
 
-    bool isFriend(userID smaller_id, userID greater_id);
+    bool isFriend(UserId smaller_id, UserId greater_id);
+
+    // 返回用户好友列表
+    // todo : 保存到本地？
+    std::vector<User> query(UserId userid);
 
 private:
     std::map<std::string, std::string> params_;
 };
 
-#endif // __FRIENDMANAGER_H__
+
+#endif // FRIENDMANAGER_H

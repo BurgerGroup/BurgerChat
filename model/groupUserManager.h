@@ -1,5 +1,7 @@
-#ifndef __GROUPUSERMANAGER_H__
-#define __GROUPUSERMANAGER_H__
+#ifndef GROUPUSERMANAGER_H
+#define GROUPUSERMANAGER_H
+
+
 #include "groupUser.h"
 #include <map>
 #include <string>
@@ -23,4 +25,5 @@ private:
     std::map<std::string, std::string> params_;
 };
 
-#endif // __GROUPUSERMANAGER_H__
+
+#endif // GROUPUSERMANAGER_H

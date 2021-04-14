@@ -30,7 +30,7 @@ bool UserManager::add(User &user)  {
     return true;
 }
 
-User UserManager::query(userID id) {
+User UserManager::query(UserId id) {
     MySQL::ptr mysql = std::make_shared<MySQL>(params_);
     mysql->connect();
     std::string sql = "select * from User where id = ?";

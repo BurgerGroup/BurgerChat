@@ -5,7 +5,7 @@ project(BurgerChat C CXX)
 if(NOT CMAKE_BUILD_TYPE)
     set(CMAKE_BUILD_TYPE "Debug")
 endif()
-set(EXECUTABLE_OUTPUT_PATH ${PROJECT_BINARY_DIR}/bin)
+set(EXECUTABLE_OUTPUT_PATH ${PROJECT_BINARY_DIR})
 set(LIBRARY_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/lib)
 
 set(CXX_FLAGS
@@ -66,6 +66,7 @@ message(STATUS "CXX_FLAGS = " ${CMAKE_CXX_FLAGS} " " ${CMAKE_CXX_FLAGS_${BUILD_T
 add_subdirectory(${PROJECT_SOURCE_DIR}/3rdparty/Burger/burger/base)
 add_subdirectory(${PROJECT_SOURCE_DIR}/3rdparty/Burger/burger/net)
 add_subdirectory(${PROJECT_SOURCE_DIR}/3rdparty/Burger/burger/db)
+add_subdirectory(${PROJECT_SOURCE_DIR}/3rdparty/Burger/thirdparty/yaml-cpp)
 add_subdirectory(${PROJECT_SOURCE_DIR}/client)
 add_subdirectory(${PROJECT_SOURCE_DIR}/server)
 add_subdirectory(${PROJECT_SOURCE_DIR}/model)

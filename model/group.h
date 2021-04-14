@@ -1,11 +1,11 @@
-#ifndef __GROUP_H__
-#define __GROUP_H__
+#ifndef GROUP_H
+#define GROUP_H
 #include <string>
 #include <list>
 
 typedef int64_t groupID;
-class Group
-{
+
+class Group {
 public:
     Group(std::string name = "", std::string desc = "A New Group.", groupID id = -1)
         : name_(name),
@@ -32,4 +32,5 @@ private:
     // std::list<userID> members_; // 群成员
 };
 
-#endif // __GROUP_H__
+
+#endif // GROUP_H
