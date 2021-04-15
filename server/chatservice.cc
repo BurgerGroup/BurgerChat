@@ -104,12 +104,13 @@ void ChatService::reg(const TcpConnectionPtr &conn, json &js, Timestamp time) {
 
 void ChatService::oneChat(const TcpConnectionPtr &conn, json &js, Timestamp time) {
     int toid = js["to"].get<int>();
+    std::cout << "TOid: "<< toid << std::endl; // for test
     {
         std::lock_guard<std::mutex> lock(mutex_);
         auto it = idUserConnMap_.find(toid);
         if(it != idUserConnMap_.end()) {
             // toid在线，转发消息   服务器主动推送消息给toid用户(中转)
-            // std::cout << js.dump() << std::endl; // for test
+            std::cout << js.dump() << std::endl; // for test
             it->second->send(js.dump());
             return;
         }

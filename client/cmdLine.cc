@@ -51,6 +51,7 @@ void CmdHandler::chat(ChatClient* client, const std::string& msg) {
     // TODO: add time
     // js["time"] = getCurrentTime();
     std::string content = js.dump();
+    // std::cout << content << std::endl; // for test
     client->send(std::move(content));
 }
 

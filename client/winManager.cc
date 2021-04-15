@@ -7,34 +7,45 @@ WinManager::WinManager(ChatClient* chatClient)
 }
 
 void WinManager::start() {
-    // for (;;) {
-        std::cout << ">> 1. login 2. signup 3. exit <<" << std::endl; 
-        std::cout << ">> ";
-        std::string input;
-        std::getline(std::cin, input);
-        int choice = atoi(input.c_str());
-        // todo : 解决缓冲区问题
-        switch (choice) {
-            case 1: {
-                login();
-                break;
-            }
-            case 2: {
-                signup();
-                break;
-            }
-            case 3: {
-                std::cout << "Bye!" << std::endl;
-                chatClient_->getClient()->disconnect();
-                exit(0);
-                break;
-            } 
-            default: {
-                std::cout << "Invalid input!" << std::endl;
-                break;
+    int notifyTimes = 0;
+    while(chatClient_->logInState_ != ChatClient::LogInState::kLoggedIn) {
+        if(chatClient_->logInState_ == ChatClient::LogInState::kNotLoggedIn) {
+            std::cout << ">> 1. login 2. signup 3. exit <<" << std::endl; 
+            std::cout << ">> ";
+            std::string input;
+            std::getline(std::cin, input);
+            int choice = atoi(input.c_str());
+            // todo : 解决缓冲区问题
+            switch (choice) {
+                case 1: {
+                    login();
+                    break;
+                }
+                case 2: {
+                    signup();
+                    break;
+                }
+                case 3: {
+                    std::cout << "Bye!" << std::endl;
+                    chatClient_->getClient()->disconnect();
+                    exit(0);
+                    break;
+                } 
+                default: {
+                    std::cout << "Invalid input!" << std::endl;
+                    break;
+                }
             }
         }
-  // }
+        else {
+            if(notifyTimes == 0) {    // TODO: 如果一直都是在Logging没有返回怎么处理？
+                std::cout << "Logging.....Please Wait......" << std::endl;
+                ++notifyTimes;
+            }
+        }
+        
+    }
+    mainMenu();
 }
 
 void WinManager::signup() {
@@ -57,17 +68,21 @@ void WinManager::signup() {
 
 
 void WinManager::login() {
+    chatClient_->setLogInState_(ChatClient::LogInState::kLoggIng);
+    std::string idStr;
     int id = 0;
     char pwd[50] = {0};
 
     while(true) {
         std::cout << "ID number: ";
-        std::cin >> id;
-        std::cin.get(); // 读掉缓冲区残留的回车
-        while (std::cin.fail()) {
-            std::cin.clear();
-            std::cin.ignore();
-        }
+        // std::cin >> id;
+        // std::cin.get(); // 读掉缓冲区残留的回车
+        std::getline(std::cin, idStr);
+        id = atoi(idStr.c_str());
+        // while (std::cin.fail()) {
+        //     std::cin.clear();
+        //     std::cin.ignore();
+        // }
         if (id <= 0) {
             std::cout << "Invalid ID" << std::endl;
             continue;
@@ -82,30 +97,9 @@ void WinManager::login() {
     js["id"] = id;
     js["password"] = pwd;
     std::string request = js.dump();
+    // std::cout << request << std::endl; // for test
     chatClient_->send(request);
 
-    // int len = send(clientfd, request.c_str(), strlen(request.c_str()) + 1, 0);
-    // if (len == -1) {
-    //     printMenu("Send request: failed!\n");
-    // } else {
-    //     char buffer[BUFFER_SIZE] = {0};
-    //     len = recv(clientfd, buffer, BUFFER_SIZE, 0);
-    //     if (len == -1) {
-    //     printMenu("Receive response: failed!\n");
-    //     } else {
-    //     json response = json::parse(buffer);
-    //     if (response["errid"].get<int>() != 0) {
-    //         // Log in failed
-    //         printMenu();
-    //         cout << response["errmsg"].get<string>() << endl;
-    //     } else {
-    //         // Log in succeed
-    //         // Enter main menu
-    //         g_mainFlag = true;
-    //         mainMenu(response);
-    //     }
-    //     }
-    // }    
 }
 
 void WinManager::mainMenu() {
