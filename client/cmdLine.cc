@@ -1,5 +1,6 @@
 #include "cmdLine.h"
 #include "chatClient.h"
+#include "color.h"
 
 std::unordered_map<std::string, std::string> CmdHandler::commandMap = {
     {"help", "显示所有支持的命令，格式help"},
@@ -23,9 +24,9 @@ std::unordered_map<std::string, std::function<void(ChatClient* , const std::stri
 };
 
 void CmdHandler::help(ChatClient*, const std::string& str) {
-    std::cout << "show command list >>> " << std::endl;
+    std::cout << GREEN << "show command list >>> " << std::endl;
     for (auto &p : commandMap) {
-        std::cout << p.first << " : " << p.second << std::endl;
+        std::cout << GREEN << p.first << " : " << p.second << std::endl;
     }
     std::cout << std::endl;
 }
@@ -33,7 +34,7 @@ void CmdHandler::help(ChatClient*, const std::string& str) {
 void CmdHandler::chat(ChatClient* client, const std::string& msg) {
     size_t idx = msg.find(":"); // friendid:message
     if (idx == msg.npos) {
-        std::cout << "chat command invalid!" << std::endl;
+        std::cout << RED << "chat command invalid!" << std::endl;
         return;
     }
 

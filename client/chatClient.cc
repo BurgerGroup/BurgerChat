@@ -1,6 +1,6 @@
 #include <burger/base/Log.h>
 #include "chatClient.h"
-
+#include "color.h"
 
 using namespace std::placeholders;
 
@@ -55,7 +55,8 @@ void ChatClient::onMessage(const TcpConnectionPtr& conn, IBuffer& buf, Timestamp
         parsedMsg += response["from"];
         parsedMsg += " says: ";
         parsedMsg += response["msg"];
-        std::cout << parsedMsg << std::endl;
+        std::cout << BOLDBLUE << parsedMsg << std::endl;
+        std::cout << RESET;
         break;
 
     case LOGOUT_MSG:
@@ -63,7 +64,7 @@ void ChatClient::onMessage(const TcpConnectionPtr& conn, IBuffer& buf, Timestamp
         break;
     
     default:
-        std::cout << "other msg type" << std::endl;
+        std::cout << BOLDBLUE << "other msg type" << std::endl;
         break;
     }
 }
@@ -73,7 +74,7 @@ void ChatClient::send(const std::string& msg) {
     if(connection_) {
         connection_->send(msg);
     } else {
-        std::cout << "connection doesn't exist" << std::endl;
+        std::cout << RED << "connection doesn't exist" << std::endl;
         ERROR("connection doesn't exist");
     }
 }
@@ -83,11 +84,11 @@ void ChatClient::signupAck(const json& response) {
         // Sign up failed
         // todo : 错误原因可以再细化一下吗？
         std::string name = response["name"];
-        std::cout << name << "Register failed!, Try again..." << std::endl;
+        std::cout << RED << name << "Register failed!, Try again..." << std::endl;
         winManager_->signup();
     } else {
     // Sign up succeed
-    std::cout << "Sign up success, your user ID is: " << response["id"]
+    std::cout << GREEN << "Sign up success, your user ID is: " << response["id"]
         << ", do not forget it!" << std::endl;
         winManager_->login();
     }
@@ -98,11 +99,11 @@ void ChatClient::loginAck(const json& response) {
         // login failed
         // todo : 错误原因可以再细化一下吗？
         std::string errmsg = response["errmsg"];
-        std::cout << errmsg << "Login failed!, Try again..." << std::endl;
+        std::cout << RED << errmsg << "Login failed!, Try again..." << std::endl;
         setLogInState_(kNotLoggedIn);
     } else {
         // Log in succeed
-        std::cout << "Login success!" << std::endl;
+        std::cout << GREEN << "Login success!" << std::endl;
         setLogInState_(kLoggedIn);
         
         info_->setName(response["name"]);
@@ -115,11 +116,11 @@ void ChatClient::logoutAck(const json& response) {
         // logout failed
         // todo : 错误原因可以再细化一下吗？
         std::string errmsg = response["errmsg"];
-        std::cout << errmsg << "Logout failed!, Try again..." << std::endl;
+        std::cout << RED << errmsg << "Logout failed!, Try again..." << std::endl;
         setLogInState_(kLoggedIn);
     } else {
         // Log out succeed
-        std::cout << "Logout success!" << std::endl;
+        std::cout << GREEN << "Logout success!" << std::endl;
         setLogInState_(kNotLoggedIn);
         info_->setState("offline");    
     }
