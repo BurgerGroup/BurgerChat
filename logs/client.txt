@@ -10,3 +10,38 @@
 2021-04-15 07:13:05 [info] [tid : 2430] [TcpClient.cc : 39 <TcpClient>] TcpClient::TcpClient[ChatClient] - connector 0x298c6a0
 2021-04-15 07:13:05 [info] [tid : 2430] [TcpClient.cc : 73 <connect>] TcpClient::connect[ChatClient] - connecting to 127.0.0.1:8888
 2021-04-15 07:13:05 [debug] [tid : 2430] [TcpConnection.cc : 40 <TcpConnection>] TcpConnection::ctor[ ChatClient:127.0.0.1:8888#1 ] at 0x298f2b0 fd = 7 
+2021-04-16 06:40:19 [debug] [tid : 2052] [Connector.cc : 17 <Connector>] ctor[0x2829700]
+2021-04-16 06:40:19 [info] [tid : 2052] [TcpClient.cc : 39 <TcpClient>] TcpClient::TcpClient[ChatClient] - connector 0x2829700
+2021-04-16 06:40:19 [info] [tid : 2052] [TcpClient.cc : 73 <connect>] TcpClient::connect[ChatClient] - connecting to 127.0.0.1:8888
+2021-04-16 06:40:19 [debug] [tid : 2052] [TcpConnection.cc : 40 <TcpConnection>] TcpConnection::ctor[ ChatClient:127.0.0.1:8888#1 ] at 0x282c320 fd = 7 
+2021-04-16 06:41:19 [debug] [tid : 2052] [TcpConnection.cc : 46 <~TcpConnection>] TcpConnection::dtor[ ChatClient:127.0.0.1:8888#1 ] at 0x282c320 fd = 7 status = kDisconnected 
+2021-04-16 06:42:06 [error] [tid : 2058] [chatClient.cc : 73 <send>] connection doesn't exist
+2021-04-16 06:46:30 [debug] [tid : 2346] [Connector.cc : 17 <Connector>] ctor[0x29a7700]
+2021-04-16 06:46:30 [info] [tid : 2346] [TcpClient.cc : 39 <TcpClient>] TcpClient::TcpClient[ChatClient] - connector 0x29a7700
+2021-04-16 06:46:30 [info] [tid : 2346] [TcpClient.cc : 73 <connect>] TcpClient::connect[ChatClient] - connecting to 127.0.0.1:8888
+2021-04-16 06:46:30 [debug] [tid : 2346] [TcpConnection.cc : 40 <TcpConnection>] TcpConnection::ctor[ ChatClient:127.0.0.1:8888#1 ] at 0x29aa320 fd = 7 
+2021-04-16 06:47:03 [debug] [tid : 2346] [TcpConnection.cc : 46 <~TcpConnection>] TcpConnection::dtor[ ChatClient:127.0.0.1:8888#1 ] at 0x29aa320 fd = 7 status = kDisconnected 
+2021-04-16 06:49:28 [debug] [tid : 2378] [Connector.cc : 17 <Connector>] ctor[0xafc700]
+2021-04-16 06:49:28 [info] [tid : 2378] [TcpClient.cc : 39 <TcpClient>] TcpClient::TcpClient[ChatClient] - connector 0xafc700
+2021-04-16 06:49:28 [info] [tid : 2378] [TcpClient.cc : 73 <connect>] TcpClient::connect[ChatClient] - connecting to 127.0.0.1:8888
+2021-04-16 06:49:28 [debug] [tid : 2378] [TcpConnection.cc : 40 <TcpConnection>] TcpConnection::ctor[ ChatClient:127.0.0.1:8888#1 ] at 0xaff320 fd = 7 
+2021-04-16 06:49:43 [debug] [tid : 2378] [TcpConnection.cc : 46 <~TcpConnection>] TcpConnection::dtor[ ChatClient:127.0.0.1:8888#1 ] at 0xaff320 fd = 7 status = kDisconnected 
+2021-04-16 06:53:40 [debug] [tid : 2534] [Connector.cc : 17 <Connector>] ctor[0xdda700]
+2021-04-16 06:53:40 [info] [tid : 2534] [TcpClient.cc : 39 <TcpClient>] TcpClient::TcpClient[ChatClient] - connector 0xdda700
+2021-04-16 06:53:40 [info] [tid : 2534] [TcpClient.cc : 73 <connect>] TcpClient::connect[ChatClient] - connecting to 127.0.0.1:8888
+2021-04-16 06:53:40 [debug] [tid : 2534] [TcpConnection.cc : 40 <TcpConnection>] TcpConnection::ctor[ ChatClient:127.0.0.1:8888#1 ] at 0xddd320 fd = 7 
+2021-04-16 06:55:37 [debug] [tid : 2581] [Connector.cc : 17 <Connector>] ctor[0x1a82700]
+2021-04-16 06:55:37 [info] [tid : 2581] [TcpClient.cc : 39 <TcpClient>] TcpClient::TcpClient[ChatClient] - connector 0x1a82700
+2021-04-16 06:55:37 [info] [tid : 2581] [TcpClient.cc : 73 <connect>] TcpClient::connect[ChatClient] - connecting to 127.0.0.1:8888
+2021-04-16 06:55:37 [debug] [tid : 2581] [TcpConnection.cc : 40 <TcpConnection>] TcpConnection::ctor[ ChatClient:127.0.0.1:8888#1 ] at 0x1a85320 fd = 7 
+2021-04-16 06:55:53 [debug] [tid : 2581] [TcpConnection.cc : 46 <~TcpConnection>] TcpConnection::dtor[ ChatClient:127.0.0.1:8888#1 ] at 0x1a85320 fd = 7 status = kDisconnected 
+2021-04-16 07:01:30 [debug] [tid : 2760] [Connector.cc : 17 <Connector>] ctor[0x1ad0700]
+2021-04-16 07:01:30 [info] [tid : 2760] [TcpClient.cc : 39 <TcpClient>] TcpClient::TcpClient[ChatClient] - connector 0x1ad0700
+2021-04-16 07:01:30 [info] [tid : 2760] [TcpClient.cc : 73 <connect>] TcpClient::connect[ChatClient] - connecting to 127.0.0.1:8888
+2021-04-16 07:01:30 [debug] [tid : 2760] [TcpConnection.cc : 40 <TcpConnection>] TcpConnection::ctor[ ChatClient:127.0.0.1:8888#1 ] at 0x1ad3320 fd = 7 
+2021-04-16 07:16:50 [debug] [tid : 3111] [Connector.cc : 17 <Connector>] ctor[0x1b94700]
+2021-04-16 07:16:50 [info] [tid : 3111] [TcpClient.cc : 39 <TcpClient>] TcpClient::TcpClient[ChatClient] - connector 0x1b94700
+2021-04-16 07:16:50 [info] [tid : 3111] [TcpClient.cc : 73 <connect>] TcpClient::connect[ChatClient] - connecting to 127.0.0.1:8888
+2021-04-16 07:16:50 [debug] [tid : 3111] [TcpConnection.cc : 40 <TcpConnection>] TcpConnection::ctor[ ChatClient:127.0.0.1:8888#1 ] at 0x1b97320 fd = 7 
+2021-04-16 07:18:46 [debug] [tid : 3111] [TcpConnection.cc : 46 <~TcpConnection>] TcpConnection::dtor[ ChatClient:127.0.0.1:8888#1 ] at 0x1b97320 fd = 7 status = kDisconnected 
+2021-04-16 07:27:59 [error] [tid : 3117] [chatClient.cc : 77 <send>] connection doesn't exist

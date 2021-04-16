@@ -17,7 +17,7 @@ public:
     // static void creategroup(int, std::string);
     // static void addgroup(int, std::string);
     // static void groupchat(int, std::string);
-    // static void loginout(int, std::string);
+    static void logout(ChatClient*, const std::string& = "");
 
     static std::unordered_map<std::string, std::string> commandMap;
     static std::unordered_map<std::string, std::function<void(ChatClient* , const std::string& )>> commandHandlerMap;

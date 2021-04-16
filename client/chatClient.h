@@ -20,30 +20,33 @@ using namespace burger::net;
 
 class WinManager;
 class Info;
+class CmdHandler;
 class ChatClient {
     friend class WinManager;
+    friend class CmdHandler;
+public:
+    enum LogInState {
+        kNotLoggedIn = 1,
+        kLogging,
+        kLoggedIn
+    };
+
 public:
     ChatClient(EventLoop* loop, const InetAddress& serverAddr);
-    ~ChatClient() = default;
+    ~ChatClient();
     // todo for safety?
     TcpClient* getClient() { return &client_; }
     void start();
     void send(const std::string& msg);
-    std::shared_ptr<Info> getInfo() { return info_;}
-    bool getLogInState() const { return logInState_; }
-
-public:
-    enum LogInState {
-        kNotLoggedIn = 1,
-        kLoggIng,
-        kLoggedIn
-    };
+    LogInState getLogInState() const { return logInState_; }
+    std::shared_ptr<Info> getInfo() const { return info_; }
 
 private:
     void onConnection(const TcpConnectionPtr& conn);
     void onMessage(const TcpConnectionPtr& conn, IBuffer& buf, Timestamp time);
     void signupAck(const json& response);
     void loginAck(const json& response);
+    void logoutAck(const json& response);
     void setLogInState_(LogInState state) { logInState_ = state; }
 private:
     EventLoop* loop_;
@@ -53,9 +56,7 @@ private:
     TcpConnectionPtr connection_;
     std::unique_ptr<WinManager> winManager_;
     std::thread interactiveThread_;
-    // std::unique_ptr<Info> info_;
     std::shared_ptr<Info> info_;
-    
 };
 
 

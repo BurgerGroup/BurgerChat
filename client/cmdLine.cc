@@ -14,12 +14,12 @@ std::unordered_map<std::string, std::string> CmdHandler::commandMap = {
 // 注册系统支持的客户端命令处理
 std::unordered_map<std::string, std::function<void(ChatClient* , const std::string& )>> CmdHandler::commandHandlerMap = {
     {"help", CmdHandler::help},
-    {"chat", CmdHandler::chat}
+    {"chat", CmdHandler::chat},
     // {"addfriend", CmdHandler::addfriend},
     // {"creategroup", CmdHandler::creategroup},
     // {"addgroup", CmdHandler::addgroup},
     // {"groupchat", CmdHandler::groupchat},
-    // {"logout", CmdHandler::logout}
+    {"logout", CmdHandler::logout}
 };
 
 void CmdHandler::help(ChatClient*, const std::string& str) {
@@ -44,7 +44,7 @@ void CmdHandler::chat(ChatClient* client, const std::string& msg) {
     js["msgid"] = ONE_CHAT_MSG;
 
     js["id"] = client->getInfo()->getId();
-    js["name"] = client->getInfo()->getName();
+    js["from"] = client->getInfo()->getName();
     js["to"] = friendid;
     js["msg"] = message;
 
@@ -55,30 +55,17 @@ void CmdHandler::chat(ChatClient* client, const std::string& msg) {
     client->send(std::move(content));
 }
 
-// void CmdHandler::chat(int, std::string) {
-//     int idx = str.find(":"); // friendid:message
-//     if (-1 == idx) {
-//         std::cerr << "chat command invalid!" << std::endl;
-//         return;
-//     }
+void CmdHandler::logout(ChatClient* client, const std::string& msg) {
+    assert(client->getLogInState() == ChatClient::kLoggedIn);
+    client->setLogInState_(ChatClient::kLogging);
 
-//     int friendid = atoi(str.substr(0, idx).c_str());  // boost::lexical_cast
-//     std::string message = str.substr(idx + 1, str.size() - idx);
+    json js;
+    js["msgid"] = LOGOUT_MSG;
+    js["id"] = client->getInfo()->getId();
+    // js["name"] = client->getInfo()->getName();
 
-//     json js;
-//     js["msgid"] = ONE_CHAT_MSG;
-
-//     js["id"] = g_currentUser.getId();
-//     js["name"] = g_currentUser.getName();
-//     js["toid"] = friendid;
-//     js["msg"] = message;
-//     js["time"] = getCurrentTime();
-//     string buffer = js.dump();
-
-//     int len = send(clientfd, buffer.c_str(), strlen(buffer.c_str()) + 1, 0);
-//     if (-1 == len)
-//     {
-//         cerr << "send chat msg error -> " << buffer << endl;
-//     }
-// }
+    std::string content = js.dump();
+    // std::cout << content << std::endl; // for test
+    client->send(std::move(content));
+}
 

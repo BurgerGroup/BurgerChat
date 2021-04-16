@@ -14,6 +14,11 @@ ChatClient::ChatClient(EventLoop* loop, const InetAddress& serverAddr)
     client_.setMessageCallback(std::bind(&ChatClient::onMessage, this, _1, _2, _3));
 }
 
+ChatClient::~ChatClient() 
+{
+    interactiveThread_.join();
+}
+
 void ChatClient::start() {
     client_.connect();  
 }
@@ -35,18 +40,26 @@ void ChatClient::onConnection(const TcpConnectionPtr& conn) {
 void ChatClient::onMessage(const TcpConnectionPtr& conn, IBuffer& buf, Timestamp time) {
     std::string msg = buf.retrieveAllAsString();
     json response = json::parse(msg);
+    std::string parsedMsg;
     switch (response["msgid"].get<int>())
     {
     case REG_MSG_ACK:
-        signupAck(response);
+        signupAck(std::move(response));
         break;
 
     case LOGIN_MSG_ACK:
-        loginAck(response);
+        loginAck(std::move(response));
         break;
     
     case ONE_CHAT_MSG:
-        std::cout << msg << std::endl;
+        parsedMsg += response["from"];
+        parsedMsg += " says: ";
+        parsedMsg += response["msg"];
+        std::cout << parsedMsg << std::endl;
+        break;
+
+    case LOGOUT_MSG:
+        logoutAck(std::move(response));
         break;
     
     default:
@@ -90,7 +103,25 @@ void ChatClient::loginAck(const json& response) {
     } else {
         // Log in succeed
         std::cout << "Login success!" << std::endl;
-        setLogInState_(kLoggedIn);    
+        setLogInState_(kLoggedIn);
+        
+        info_->setName(response["name"]);
+        info_->setState("online");    
+    }
+}
+
+void ChatClient::logoutAck(const json& response) {
+    if (response["errno"].get<int>() != 0) {
+        // logout failed
+        // todo : 错误原因可以再细化一下吗？
+        std::string errmsg = response["errmsg"];
+        std::cout << errmsg << "Logout failed!, Try again..." << std::endl;
+        setLogInState_(kLoggedIn);
+    } else {
+        // Log out succeed
+        std::cout << "Logout success!" << std::endl;
+        setLogInState_(kNotLoggedIn);
+        info_->setState("offline");    
     }
 }
 

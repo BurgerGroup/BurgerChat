@@ -3,12 +3,17 @@
 #include "cmdLine.h"
 
 WinManager::WinManager(ChatClient* chatClient)
-    : chatClient_(chatClient)  {
+    : chatClient_(chatClient),
+      quit_(false)  {
+}
+
+WinManager::~WinManager() {
+    assert(quit_ == true);
 }
 
 void WinManager::start() {
     int notifyTimes = 0;
-    while(chatClient_->logInState_ != ChatClient::LogInState::kLoggedIn) {
+    while(!quit_) {
         if(chatClient_->logInState_ == ChatClient::LogInState::kNotLoggedIn) {
             std::cout << ">> 1. login 2. signup 3. exit <<" << std::endl; 
             std::cout << ">> ";
@@ -28,6 +33,7 @@ void WinManager::start() {
                 case 3: {
                     std::cout << "Bye!" << std::endl;
                     chatClient_->getClient()->disconnect();
+                    quit_ = true;
                     exit(0);
                     break;
                 } 
@@ -37,15 +43,18 @@ void WinManager::start() {
                 }
             }
         }
-        else {
-            if(notifyTimes == 0) {    // TODO: 如果一直都是在Logging没有返回怎么处理？
-                std::cout << "Logging.....Please Wait......" << std::endl;
+        else if(chatClient_->logInState_ == ChatClient::LogInState::kLogging) {
+            // TODO : 改成condition_variable
+            if(notifyTimes < 1) {    // TODO: 如果一直都是在Logging没有返回怎么处理？
+                std::cout << "Logging IN/OUT.....Please Wait......" << std::endl;
                 ++notifyTimes;
             }
         }
-        
+        else {
+            notifyTimes = 0;
+            mainMenu();
+        }
     }
-    mainMenu();
 }
 
 void WinManager::signup() {
@@ -68,10 +77,11 @@ void WinManager::signup() {
 
 
 void WinManager::login() {
-    chatClient_->setLogInState_(ChatClient::LogInState::kLoggIng);
+    chatClient_->setLogInState_(ChatClient::LogInState::kLogging);
     std::string idStr;
     int id = 0;
-    char pwd[50] = {0};
+    // char pwd[50] = {0};
+    std::string pwd;
 
     while(true) {
         std::cout << "ID number: ";
@@ -90,22 +100,24 @@ void WinManager::login() {
         break;
     }
     std::cout << "Password: ";
-    std::cin.getline(pwd, 50);
+    std::getline(std::cin, pwd);
+
+    chatClient_->info_->setId(id);
+    chatClient_->info_->setPwd(pwd);
 
     json js;
     js["msgid"] = LOGIN_MSG;
     js["id"] = id;
-    js["password"] = pwd;
+    js["password"] = pwd.c_str();
     std::string request = js.dump();
     // std::cout << request << std::endl; // for test
     chatClient_->send(request);
-
 }
 
 void WinManager::mainMenu() {
     std::cout << ">> Main Menu <<" << std::endl; 
     std::cout << ">> Enter 'help' to get help <<" << std::endl; 
-    for (;;) {
+    while(chatClient_->logInState_ == ChatClient::kLoggedIn) {
         std::cout << ">> Enter Your Choice <<" << std::endl; 
         std::string input;
         std::string action;

@@ -104,14 +104,14 @@ void ChatService::reg(const TcpConnectionPtr &conn, json &js, Timestamp time) {
 
 void ChatService::oneChat(const TcpConnectionPtr &conn, json &js, Timestamp time) {
     int toid = js["to"].get<int>();
-    std::cout << "TOid: "<< toid << std::endl; // for test
+    // std::cout << "TOid: "<< toid << std::endl; // for test
     {
         std::lock_guard<std::mutex> lock(mutex_);
         auto it = idUserConnMap_.find(toid);
         if(it != idUserConnMap_.end()) {
             // toid在线，转发消息   服务器主动推送消息给toid用户(中转)
-            std::cout << js.dump() << std::endl; // for test
-            it->second->send(js.dump());
+            // std::cout << js.dump() << std::endl; // for test
+            it->second->send(std::move(js.dump()));
             return;
         }
     }
@@ -140,8 +140,19 @@ void ChatService::groupChat(const TcpConnectionPtr &conn, json &js, Timestamp ti
     INFO("group chat");
 }
 
-void ChatService::loginout(const TcpConnectionPtr &conn, json &js, Timestamp time) {
-    INFO("LOGINOUT");
+void ChatService::logout(const TcpConnectionPtr &conn, json &js, Timestamp time) {
+    INFO("LOGOUT");
+    UserId id = js["id"].get<UserId>();
+    User user = userManager_.query(id);
+    assert(user.getState() == "online");
+
+    user.setState("offline");
+    userManager_.updateState(user);
+
+    json response;
+    response["msgid"] = LOGOUT_MSG;
+    response["errno"] = 0;
+    conn->send(response.dump());
 }
 
 void ChatService::clientCloseException(const TcpConnectionPtr &conn)  {
@@ -190,7 +201,7 @@ ChatService::ChatService() {
     // idMsgHandlerMap_[LOGIN_MSG] = std::bind(&ChatService::login, this, _1, _2, _3);
     // 用户基本业务管理相关事件处理回调注册
     idMsgHandlerMap_.insert({LOGIN_MSG, std::bind(&ChatService::login, this, _1, _2, _3)});
-    idMsgHandlerMap_.insert({LOGINOUT_MSG, std::bind(&ChatService::loginout, this, _1, _2, _3)});
+    idMsgHandlerMap_.insert({LOGOUT_MSG, std::bind(&ChatService::logout, this, _1, _2, _3)});
     idMsgHandlerMap_.insert({REG_MSG, std::bind(&ChatService::reg, this, _1, _2, _3)});
     idMsgHandlerMap_.insert({ONE_CHAT_MSG, std::bind(&ChatService::oneChat, this, _1, _2, _3)});
     idMsgHandlerMap_.insert({ADD_FRIEND_MSG, std::bind(&ChatService::addFriend, this, _1, _2, _3)});

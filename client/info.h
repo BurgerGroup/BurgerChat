@@ -8,13 +8,21 @@
 // 记录当前用户的信息
 class Info {
 public:
-    Info() = default;
+    Info(std::string name = "", std::string pwd = "", std::string state = "offline", UserId id = -1)
+        : currentUser_(name, pwd, state, id) {}
+    Info(const User& user) : currentUser_(user) {}
     ~Info() = default;
 
     UserId getId() const { return currentUser_.getId(); }
     std::string getName() const { return currentUser_.getName(); }
     std::string getPwd() const { return currentUser_.getPwd(); }
     std::string getState() { return currentUser_.getState(); }
+
+    void setId(UserId id) { currentUser_.setId(id); }
+    void setName(const std::string& name) { currentUser_.setName(name); }
+    void setPwd(const std::string& pwd) { currentUser_.setPwd(pwd); }
+    void setState(const std::string& state) { currentUser_.setState(state); }
+
 private:
     User currentUser_;     // 记录当前系统登录的用户信息
     std::vector<User> currentUserFriendList_;

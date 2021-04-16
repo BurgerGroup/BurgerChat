@@ -9,13 +9,15 @@ class ChatClient;
 class WinManager {
 public:
     explicit WinManager(ChatClient* chatClient);
-    ~WinManager() = default;
+    ~WinManager();
     void start();
     void signup();
     void login();
     void mainMenu();
+    void quit() { quit_ = true; }
 private:
     ChatClient* chatClient_;
+    bool quit_;
 };
 
 
