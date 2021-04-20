@@ -123,9 +123,35 @@ void ChatService::oneChat(const TcpConnectionPtr &conn, json &js, Timestamp time
 void ChatService::addFriend(const TcpConnectionPtr &conn, json &js, Timestamp time) {
     UserId userid = js["id"].get<UserId>();
     UserId friendid = js["friendid"].get<UserId>();
+    addFriendRequestState state(js["addFriendRequestState"].get<int>());
+    js["errno"] = 0;
 
-    // 存储好友信息
-    friendManager_.addFriendship(userid, friendid);
+    if(state == kPending) {
+        // todo : 再创建一个表？还是直接存放在离线消息表里面，每次上线都提醒。
+    }
+
+    UserId toid = 0;
+    if(state == kApply) {
+        toid = friendid;
+    }
+    else if(state == kRefuse) {
+        toid = userid;
+    }
+    else if(state == kAgree) { // 存储好友信息
+        toid = userid;
+        friendManager_.addFriendship(userid, friendid);
+    }
+
+    {
+        std::lock_guard<std::mutex> lock(mutex_);
+        auto it = idUserConnMap_.find(toid);
+        if(it != idUserConnMap_.end()) {
+            it->second->send(std::move(js.dump()));
+            return;
+        }
+    }
+    // toid不在线，存储离线消息
+    offlineManager_.add(toid, std::move(js.dump()));
 }
 
 void ChatService::createGroup(const TcpConnectionPtr &conn, json &js, Timestamp time) {

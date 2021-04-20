@@ -8,6 +8,7 @@
 #include <vector>
 #include "json/json.hpp"
 #include "msg.h"
+#include "addFriend.h"
 #include "userManager.h"
 #include "OfflineMsgManager.h"
 #include "friendManager.h"

@@ -100,7 +100,7 @@ void WinManager::login() {
         //     std::cin.ignore();
         // }
         if (id <= 0) {
-            std::cout << GREEN << "Invalid ID" << std::endl;
+            std::cout << RED << "Invalid ID!" << std::endl;
             continue;
         }
         break;
@@ -119,6 +119,46 @@ void WinManager::login() {
     std::string request = js.dump();
     // std::cout << request << std::endl; // for test
     chatClient_->send(request);
+}
+
+void WinManager::confirmAddFriendRequest(const json& request) {
+    UserId userid = request["id"].get<UserId>();
+    UserId friendid = request["friendid"].get<UserId>();
+    std::string name = request["name"];
+    bool hasChoosed = false;
+    while(!hasChoosed) {
+        std::cout << YELLOW << userid << "(" << name << ")" << "wants to MAKE FRIEND with you!!!" << std::endl;
+        std::cout << ">>> Input : 1.Agree  2.Refuse  3.Handle it later... <<< " << std::endl;
+        std::cout << RESET;
+
+        std::string input;
+        std::getline(std::cin, input);
+        int choice = atoi(input.c_str());
+        switch (choice) {
+            case 1: {
+                request["addFriendRequestState"] = kAgree;
+                hasChoosed = true;
+                break;
+            }
+            case 2: {
+                request["addFriendRequestState"] = kRefuse;
+                hasChoosed = true;
+                break;
+            }
+            case 3: {
+                request["addFriendRequestState"] = kPending;
+                hasChoosed = true;
+                break;
+            } 
+            default: {
+                request["addFriendRequestState"] = kPending;
+                hasChoosed = false;
+                break;
+            }
+        }
+    }
+    std::string content = request.dump();
+    chatClient_->send(std::move(content));
 }
 
 void WinManager::mainMenu() {

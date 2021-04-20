@@ -38,7 +38,7 @@ void CmdHandler::chat(ChatClient* client, const std::string& msg) {
         return;
     }
 
-    int friendid = atoi(msg.substr(0, idx).c_str());  // boost::lexical_cast
+    UserId friendid = atoi(msg.substr(0, idx).c_str());  // boost::lexical_cast
     std::string message = msg.substr(idx + 1, msg.size() - idx);
 
     json js;
@@ -70,3 +70,17 @@ void CmdHandler::logout(ChatClient* client, const std::string& msg) {
     client->send(std::move(content));
 }
 
+void CmdHandler::addfriend(ChatClient* client, const std::string& msg) {
+    UserId friendid = atoi(msg.c_str()); 
+    json js;
+    js["msgid"] = ADD_FRIEND_MSG;
+
+    js["id"] = client->getInfo()->getId();
+    js["name"] = client->getInfo()->getName();
+    js["friendid"] = friendid;
+    js["addFriendRequestState"] = kApply;
+
+    std::string content = js.dump();
+    // std::cout << content << std::endl; // for test
+    client->send(std::move(content));
+}

@@ -32,6 +32,8 @@ public:
     };
 
 public:
+    using MsgHandler = std::function<void(const json&)>;
+
     ChatClient(EventLoop* loop, const InetAddress& serverAddr);
     ~ChatClient();
     // todo for safety?
@@ -44,10 +46,12 @@ public:
 private:
     void onConnection(const TcpConnectionPtr& conn);
     void onMessage(const TcpConnectionPtr& conn, IBuffer& buf, Timestamp time);
+    void setLogInState_(LogInState state) { logInState_ = state; }
+
     void signupAck(const json& response);
     void loginAck(const json& response);
     void logoutAck(const json& response);
-    void setLogInState_(LogInState state) { logInState_ = state; }
+    void addFriendAck(const json& response);
 private:
     EventLoop* loop_;
     TcpClient client_;
@@ -57,6 +61,7 @@ private:
     std::unique_ptr<WinManager> winManager_;
     std::thread interactiveThread_;
     std::shared_ptr<Info> info_;
+    std::unordered_map<int, MsgHandler> idMsgHandlerMap_;
 };
 
 

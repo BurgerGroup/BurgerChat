@@ -6,6 +6,7 @@
 #include <functional>
 #include "json/json.hpp"
 #include "msg.h"
+#include "addFriend.h"
 using json = nlohmann::json;
 
 class ChatClient;
@@ -13,7 +14,7 @@ class CmdHandler {
 public:
     static void help(ChatClient* = nullptr, const std::string& str = "");
     static void chat(ChatClient*, const std::string&);
-    // static void addfriend(int, std::string);
+    static void addfriend(ChatClient*, const std::string&));
     // static void creategroup(int, std::string);
     // static void addgroup(int, std::string);
     // static void groupchat(int, std::string);

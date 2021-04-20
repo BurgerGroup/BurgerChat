@@ -3,6 +3,7 @@
 
 #include "json/json.hpp"
 #include "msg.h"
+#include "addFriend.h"
 using json = nlohmann::json;
 
 class ChatClient;
@@ -13,6 +14,7 @@ public:
     void start();
     void signup();
     void login();
+    void confirmAddFriendRequest(const json& request);
     void mainMenu();
     void quit() { quit_ = true; }
 private:
