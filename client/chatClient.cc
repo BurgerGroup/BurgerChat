@@ -66,7 +66,7 @@ void ChatClient::onMessage(const TcpConnectionPtr& conn, IBuffer& buf, Timestamp
             ERROR("msgid : {} ChatClient can't find handler", msgid);
         } else {
             auto msgHandler = idMsgHandlerMap_[msgid];
-            msgHandler(std::move(response))
+            msgHandler(std::move(response));
         }
     }
 }
@@ -136,17 +136,23 @@ void ChatClient::addFriendAck(const json& response) {
         std::cout << RED << errmsg << "Add Friend failed!" << std::endl;
     } else {
         auto state = addFriendRequestState(response["addFriendRequestState"]);
-        if (state = kApply) {
-            winManager_->confirmAddFriendRequest(response);
+        if (state == kApply) {
+            friendRequests_.push(std::move(response));
+            std::cout << YELLOW << "You have a new friend request!!!" 
+                     << friendRequests_.size() << " request(s) in total." << std::endl;
+            std::cout << RESET;
         }
-        else if(state = kAgree) {
+        else if(state == kAgree) {
             std::cout << YELLOW << response["id"] << " now is your friend!" << std::endl;
+            std::cout << RESET;
         }
-        else if(state = kAgree) {
+        else if(state == kRefuse) {
             std::cout << RED << response["id"] << " refuses to be your friend!" << std::endl;
+            std::cout << RESET;
         }
-        else {
+        else {   // what?
             std::cout << RED << "Unknown response!" << std::endl;
+            std::cout << RESET;
         }   
     }
 }

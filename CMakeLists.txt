@@ -2,6 +2,8 @@ cmake_minimum_required(VERSION 2.8)
 
 project(BurgerChat C CXX)
 
+enable_language(ASM)
+
 if(NOT CMAKE_BUILD_TYPE)
     set(CMAKE_BUILD_TYPE "Debug")
 endif()

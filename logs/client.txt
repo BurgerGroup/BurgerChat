@@ -49,3 +49,23 @@
 2021-04-16 08:09:00 [info] [tid : 3944] [TcpClient.cc : 39 <TcpClient>] TcpClient::TcpClient[ChatClient] - connector 0xe92700
 2021-04-16 08:09:00 [info] [tid : 3944] [TcpClient.cc : 73 <connect>] TcpClient::connect[ChatClient] - connecting to 127.0.0.1:8888
 2021-04-16 08:09:00 [debug] [tid : 3944] [TcpConnection.cc : 40 <TcpConnection>] TcpConnection::ctor[ ChatClient:127.0.0.1:8888#1 ] at 0xe95320 fd = 7 
+2021-04-21 03:21:39 [debug] [tid : 3659] [Connector.cc : 17 <Connector>] [coId : 0] ctor[0x25111c0]
+2021-04-21 03:21:39 [info] [tid : 3659] [TcpClient.cc : 39 <TcpClient>] [coId : 0] TcpClient::TcpClient[ChatClient] - connector 0x25111c0
+2021-04-21 03:21:39 [info] [tid : 3659] [TcpClient.cc : 73 <connect>] [coId : 0] TcpClient::connect[ChatClient] - connecting to 127.0.0.1:8888
+2021-04-21 03:21:39 [debug] [tid : 3659] [TcpConnection.cc : 40 <TcpConnection>] [coId : 0] TcpConnection::ctor[ ChatClient:127.0.0.1:8888#1 ] at 0x250fa60 fd = 7 
+2021-04-21 05:51:15 [debug] [tid : 3871] [Connector.cc : 17 <Connector>] [coId : 0] ctor[0x27d91c0]
+2021-04-21 05:51:15 [info] [tid : 3871] [TcpClient.cc : 39 <TcpClient>] [coId : 0] TcpClient::TcpClient[ChatClient] - connector 0x27d91c0
+2021-04-21 05:51:15 [info] [tid : 3871] [TcpClient.cc : 73 <connect>] [coId : 0] TcpClient::connect[ChatClient] - connecting to 127.0.0.1:8888
+2021-04-21 05:51:15 [debug] [tid : 3871] [TcpConnection.cc : 40 <TcpConnection>] [coId : 0] TcpConnection::ctor[ ChatClient:127.0.0.1:8888#1 ] at 0x27d7a60 fd = 7 
+2021-04-21 05:56:11 [debug] [tid : 4015] [Connector.cc : 17 <Connector>] [coId : 0] ctor[0x2083250]
+2021-04-21 05:56:11 [info] [tid : 4015] [TcpClient.cc : 39 <TcpClient>] [coId : 0] TcpClient::TcpClient[ChatClient] - connector 0x2083250
+2021-04-21 05:56:11 [info] [tid : 4015] [TcpClient.cc : 73 <connect>] [coId : 0] TcpClient::connect[ChatClient] - connecting to 127.0.0.1:8888
+2021-04-21 05:56:11 [debug] [tid : 4015] [TcpConnection.cc : 40 <TcpConnection>] [coId : 0] TcpConnection::ctor[ ChatClient:127.0.0.1:8888#1 ] at 0x2081b10 fd = 7 
+2021-04-21 06:25:32 [debug] [tid : 4171] [Connector.cc : 17 <Connector>] [coId : 0] ctor[0x26da250]
+2021-04-21 06:25:32 [info] [tid : 4171] [TcpClient.cc : 39 <TcpClient>] [coId : 0] TcpClient::TcpClient[ChatClient] - connector 0x26da250
+2021-04-21 06:25:32 [info] [tid : 4171] [TcpClient.cc : 73 <connect>] [coId : 0] TcpClient::connect[ChatClient] - connecting to 127.0.0.1:8888
+2021-04-21 06:25:32 [debug] [tid : 4171] [TcpConnection.cc : 40 <TcpConnection>] [coId : 0] TcpConnection::ctor[ ChatClient:127.0.0.1:8888#1 ] at 0x26d8b10 fd = 7 
+2021-04-21 07:42:43 [debug] [tid : 4663] [Connector.cc : 17 <Connector>] [coId : 0] ctor[0x2303340]
+2021-04-21 07:42:43 [info] [tid : 4663] [TcpClient.cc : 39 <TcpClient>] [coId : 0] TcpClient::TcpClient[ChatClient] - connector 0x2303340
+2021-04-21 07:42:43 [info] [tid : 4663] [TcpClient.cc : 73 <connect>] [coId : 0] TcpClient::connect[ChatClient] - connecting to 127.0.0.1:8888
+2021-04-21 07:42:43 [debug] [tid : 4663] [TcpConnection.cc : 40 <TcpConnection>] [coId : 0] TcpConnection::ctor[ ChatClient:127.0.0.1:8888#1 ] at 0x2305770 fd = 7 

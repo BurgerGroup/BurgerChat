@@ -9,6 +9,7 @@
 #include <mutex>
 #include <atomic>
 #include <vector>
+#include <queue>
 #include "json/json.hpp"
 #include "msg.h"
 #include "winManager.h"
@@ -62,6 +63,7 @@ private:
     std::thread interactiveThread_;
     std::shared_ptr<Info> info_;
     std::unordered_map<int, MsgHandler> idMsgHandlerMap_;
+    std::queue<json> friendRequests_;
 };
 
 

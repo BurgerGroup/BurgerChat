@@ -103,7 +103,7 @@ void ChatService::reg(const TcpConnectionPtr &conn, json &js, Timestamp time) {
 }
 
 void ChatService::oneChat(const TcpConnectionPtr &conn, json &js, Timestamp time) {
-    int toid = js["to"].get<int>();
+    UserId toid = js["to"].get<UserId>();
     // std::cout << "TOid: "<< toid << std::endl; // for test
     {
         std::lock_guard<std::mutex> lock(mutex_);
@@ -123,8 +123,11 @@ void ChatService::oneChat(const TcpConnectionPtr &conn, json &js, Timestamp time
 void ChatService::addFriend(const TcpConnectionPtr &conn, json &js, Timestamp time) {
     UserId userid = js["id"].get<UserId>();
     UserId friendid = js["friendid"].get<UserId>();
-    addFriendRequestState state(js["addFriendRequestState"].get<int>());
+    addFriendRequestState state;
+    state = addFriendRequestState(js["addFriendRequestState"].get<int>());
     js["errno"] = 0;
+
+    // todo: 如果已经是好友，直接返回提示消息即可
 
     if(state == kPending) {
         // todo : 再创建一个表？还是直接存放在离线消息表里面，每次上线都提醒。
@@ -144,9 +147,8 @@ void ChatService::addFriend(const TcpConnectionPtr &conn, json &js, Timestamp ti
 
     {
         std::lock_guard<std::mutex> lock(mutex_);
-        auto it = idUserConnMap_.find(toid);
-        if(it != idUserConnMap_.end()) {
-            it->second->send(std::move(js.dump()));
+        if(idUserConnMap_.find(toid) != idUserConnMap_.end()) {
+            idUserConnMap_[toid]->send(std::move(js.dump()));
             return;
         }
     }

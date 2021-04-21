@@ -14,7 +14,6 @@ public:
     void start();
     void signup();
     void login();
-    void confirmAddFriendRequest(const json& request);
     void mainMenu();
     void quit() { quit_ = true; }
 private:

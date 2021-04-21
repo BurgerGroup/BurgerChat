@@ -61,7 +61,7 @@ private:
     // std::unordered_map<MsgType, MsgHandler, std::hash<int> > idMsgHandlerMap_;
     std::unordered_map<int, MsgHandler> idMsgHandlerMap_;
     // 在线用户的通信连接，我们需要长连接
-    std::unordered_map<int, TcpConnectionPtr> idUserConnMap_;
+    std::unordered_map<UserId, TcpConnectionPtr> idUserConnMap_;
     std::mutex mutex_;
 };
 
