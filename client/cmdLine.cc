@@ -41,6 +41,12 @@ void CmdHandler::chat(ChatClient* client, const std::string& msg) {
     }
 
     UserId friendid = atoi(msg.substr(0, idx).c_str());  // boost::lexical_cast
+
+    if(!client->info_->hasFriend(friendid)) {
+        std::cout << RED << "This User is not your friend yet!!" << std::endl;
+        return;
+    }
+
     std::string message = msg.substr(idx + 1, msg.size() - idx);
 
     json js;
@@ -74,6 +80,14 @@ void CmdHandler::logout(ChatClient* client, const std::string& msg) {
 
 void CmdHandler::addfriend(ChatClient* client, const std::string& msg) {
     UserId friendid = atoi(msg.c_str()); 
+
+    // 如果已经是好友，直接返回提示消息即可
+    if(client->info_->hasFriend(friendid)) {
+        std::cout << RED << "User" + std::to_string(friendid) + " is your friend already!" << std::endl;
+        std::cout << RESET;
+        return;
+    }   
+
     json js;
     js["msgid"] = ADD_FRIEND_MSG;
 
@@ -88,6 +102,12 @@ void CmdHandler::addfriend(ChatClient* client, const std::string& msg) {
 }
 
 void CmdHandler::confirmFriendRequest(ChatClient* client, const std::string&) {
+    if(client->friendRequests_.empty()) {
+        std::cout << YELLOW << "You don't have any new friend requests!!!" << std::endl;
+        return;
+    }
+
+    std::cout << YELLOW << "You have " << client->friendRequests_.size() <<" new friend requests in total!" << std::endl;
     auto request = std::move(client->friendRequests_.front());
     client->friendRequests_.pop();
 

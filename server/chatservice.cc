@@ -1,5 +1,6 @@
 #include "chatservice.h"
 #include <burger/base/Log.h>
+#include <burger/base/Timestamp.h>
 
 using namespace std::placeholders;
 
@@ -42,11 +43,18 @@ void ChatService::login(const TcpConnectionPtr &conn, json &js, Timestamp time) 
             response["name"] = user.getName();  // todo: 这些应该再客户端本地存储
 
             // 查询该用户是否有离线消息
-            std::vector<std::string> offlineList = offlineManager_.query(id);
-            if(!offlineList.empty()) {
-                response["offlinemsg"] = offlineList;
+            std::vector<std::string> offlineMsgList = offlineMsgManager_.query(id);
+            if(!offlineMsgList.empty()) {
+                response["offlinemsg"] = offlineMsgList;
                 // 读取该用户的离线消息后，把该用户的所有离线消息删除掉
-                offlineManager_.remove(id);
+                offlineMsgManager_.remove(id);
+            }
+
+            // 查询该用户是否有离线好友申请
+            std::vector<std::string> offlineList = offlineMsgManager_.query(id);
+            if(!offlineList.empty()) {
+                response["offlineNotify"] = offlineList;
+                // 读取该用户的离线好友申请后，不会删除掉；在得到确认时才会删除
             }
             
             // 查询该用户的好友信息并返回
@@ -116,33 +124,38 @@ void ChatService::oneChat(const TcpConnectionPtr &conn, json &js, Timestamp time
         }
     }
     // toid不在线，存储离线消息
-    offlineManager_.add(toid, js.dump());
+    offlineMsgManager_.add(toid, js.dump());
 }
 
 
 void ChatService::addFriend(const TcpConnectionPtr &conn, json &js, Timestamp time) {
-    UserId userid = js["id"].get<UserId>();
-    UserId friendid = js["friendid"].get<UserId>();
+    UserId userid = js["id"].get<UserId>();  // 提出好友申请的/收到好友回复的
+    UserId friendid = js["friendid"].get<UserId>();  // 收到好友申请的人/发出好友回复的
     addFriendRequestState state;
     state = addFriendRequestState(js["addFriendRequestState"].get<int>());
     js["errno"] = 0;
 
-    // todo: 如果已经是好友，直接返回提示消息即可
-
-    if(state == kPending) {
-        // todo : 再创建一个表？还是直接存放在离线消息表里面，每次上线都提醒。
-    }
-
     UserId toid = 0;
-    if(state == kApply) {
+    if(state == kApply) {  
         toid = friendid;
+        // 保存消息，在返回回复时删除
+        uint64_t now = Timestamp::now().microSecondsSinceEpoch();
+        js["recvTime"] = now;
+        offlineNotificationManager_.add(friendid, userid, now, "user", std::move(js.dump()));
     }
-    else if(state == kRefuse) {
+    else if(state == kRefuse) { 
         toid = userid;
+        uint64_t recvTime = js["recvTime"];
+        offlineNotificationManager_.remove(friendid, userid, recvTime, "user");
     }
     else if(state == kAgree) { // 存储好友信息
         toid = userid;
         friendManager_.addFriendship(userid, friendid);
+        uint64_t recvTime = js["recvTime"];
+        offlineNotificationManager_.remove(friendid, userid, recvTime, "user");
+    }
+    else if(state == kPending) {
+        // ...
     }
 
     {
@@ -152,8 +165,11 @@ void ChatService::addFriend(const TcpConnectionPtr &conn, json &js, Timestamp ti
             return;
         }
     }
-    // toid不在线，存储离线消息
-    offlineManager_.add(toid, std::move(js.dump()));
+
+    // 提出好友申请的人不在线，存储离线消息
+    if(toid == userid) { // 好友回复消息，即是普通消息
+        offlineMsgManager_.add(toid, std::move(js.dump()));
+    }
 }
 
 void ChatService::createGroup(const TcpConnectionPtr &conn, json &js, Timestamp time) {

@@ -56,7 +56,8 @@ private:
 private:
 
     UserManager userManager_;
-    OfflineMsgManager offlineManager_;
+    OfflineMsgManager offlineMsgManager_;
+    OfflineNotificationManager offlineNotificationManager_;
     FriendManager friendManager_;
     // 存储消息id和其对应的业务处理方法
     // std::unordered_map<MsgType, MsgHandler, std::hash<int> > idMsgHandlerMap_;

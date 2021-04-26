@@ -108,8 +108,34 @@ void ChatClient::loginAck(const json& response) {
         std::cout << GREEN << "Login success!" << std::endl;
         setLogInState_(kLoggedIn);
         
+        // 处理离线信息
+        auto it = response.find("offlinemsg");
+        if(it != response.end()) {
+            std::cout << GREEN << "You have offline messages: " << std::endl;
+            std::vector<std::string> offlinemsgs = response["offlinemsg"];
+            for(const auto& msg : offlinemsgs) {
+                std::cout << BOLDBLUE << msg << std::endl;
+            }
+        }
+
+        it = response.find("offlineNotify");
+        if(it != response.end()) {
+            std::vector<std::string> offlineNotifications = response["offlineNotify"];
+            for(const auto& req : offlineNotifications) {
+                friendRequests_.push(json::parse(req));
+            }
+            std::cout << YELLOW << "You have " << friendRequests_.size() <<" offline new friend requests!" << std::endl;
+        }
+        
+        // 设置用户信息
         info_->setName(response["name"]);
-        info_->setState("online");    
+        info_->setState("online");
+
+        it = response.find("friends");
+        if(it != response.end()) {
+            std::vector<std::string> friends = response["friends"];
+            info_->addFriends(friends);
+        }    
     }
 }
 
@@ -143,11 +169,11 @@ void ChatClient::addFriendAck(const json& response) {
             std::cout << RESET;
         }
         else if(state == kAgree) {
-            std::cout << YELLOW << response["id"] << " now is your friend!" << std::endl;
+            std::cout << YELLOW << response["friendid"] << " now is your friend!" << std::endl;
             std::cout << RESET;
         }
         else if(state == kRefuse) {
-            std::cout << RED << response["id"] << " refuses to be your friend!" << std::endl;
+            std::cout << RED << response["friendid"] << " refuses to be your friend!" << std::endl;
             std::cout << RESET;
         }
         else {   // what?
