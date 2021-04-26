@@ -4,6 +4,7 @@ set(model_SRCS
     groupUserManager.cc
     friendManager.cc
     offlineMsgManager.cc
+    offlineNotificationManager.cc
   )
 
 add_library(chat_model ${model_SRCS})

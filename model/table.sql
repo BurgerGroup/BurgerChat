@@ -39,3 +39,12 @@ CREATE table OfflineMsg(
     userid BIGINT NOT NULL,
     message VARCHAR(500) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+CREATE table OfflineNotification(
+    userid BIGINT NOT NULL,
+    fromid BIGINT NOT NULL,
+    recvTime BIGINT NOT NULL,
+    fromType ENUM('user', 'group') DEFAULT 'user',
+    message VARCHAR(500) NOT NULL,
+    PRIMARY KEY(userid, fromid, fromType, recvTime)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;

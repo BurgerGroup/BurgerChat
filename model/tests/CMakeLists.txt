@@ -9,3 +9,6 @@ target_link_libraries(test_user chat_model)
 
 add_executable(offlineMsg_test offlineMsg_test.cc)
 target_link_libraries(offlineMsg_test chat_model)
+
+add_executable(offlineNotification_test offlineNotification_test.cc)
+target_link_libraries(offlineNotification_test chat_model)

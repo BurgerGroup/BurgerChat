@@ -20,6 +20,7 @@ set(CXX_FLAGS
  -Werror
  -Wconversion
  -Wno-unused-parameter
+ -Wno-unused-but-set-variable
  -Wold-style-cast
  -Woverloaded-virtual
  -Wpointer-arith

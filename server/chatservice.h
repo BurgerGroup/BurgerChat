@@ -11,6 +11,7 @@
 #include "addFriend.h"
 #include "userManager.h"
 #include "OfflineMsgManager.h"
+#include "offlineNotificationManager.h"
 #include "friendManager.h"
 
 using namespace burger;
