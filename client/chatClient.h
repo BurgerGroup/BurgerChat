@@ -47,12 +47,14 @@ public:
 private:
     void onConnection(const TcpConnectionPtr& conn);
     void onMessage(const TcpConnectionPtr& conn, IBuffer& buf, Timestamp time);
+    void handleMessage(const std::string& msg);
     void setLogInState_(LogInState state) { logInState_ = state; }
 
     void signupAck(const json& response);
     void loginAck(const json& response);
     void logoutAck(const json& response);
     void addFriendAck(const json& response);
+
 private:
     EventLoop* loop_;
     TcpClient client_;

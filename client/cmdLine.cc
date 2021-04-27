@@ -5,7 +5,7 @@
 std::unordered_map<std::string, std::string> CmdHandler::commandMap = {
     {"help", "显示所有支持的命令，格式help"},
     {"chat", "一对一聊天，格式chat:friendid:message"},
-    {"addfriend", "添加好友，格式addfriend:friendid"},
+    {"addFriend", "添加好友，格式addFriend:friendid"},
     {"confirmFriendRequest", "查看好友请求，格式confirmFriendRequest"},
     {"creategroup", "创建群组，格式creategroup:groupname:groupdesc"},
     {"addgroup", "加入群组，格式addgroup:groupid"},
@@ -17,7 +17,7 @@ std::unordered_map<std::string, std::string> CmdHandler::commandMap = {
 std::unordered_map<std::string, std::function<void(ChatClient* , const std::string& )>> CmdHandler::commandHandlerMap = {
     {"help", CmdHandler::help},
     {"chat", CmdHandler::chat},
-    {"addfriend", CmdHandler::addfriend},
+    {"addFriend", CmdHandler::addFriend},
     {"confirmFriendRequest", CmdHandler::confirmFriendRequest},
     // {"creategroup", CmdHandler::creategroup},
     // {"addgroup", CmdHandler::addgroup},
@@ -78,12 +78,12 @@ void CmdHandler::logout(ChatClient* client, const std::string& msg) {
     client->send(std::move(content));
 }
 
-void CmdHandler::addfriend(ChatClient* client, const std::string& msg) {
+void CmdHandler::addFriend(ChatClient* client, const std::string& msg) {
     UserId friendid = atoi(msg.c_str()); 
 
     // 如果已经是好友，直接返回提示消息即可
     if(client->info_->hasFriend(friendid)) {
-        std::cout << RED << "User" + std::to_string(friendid) + " is your friend already!" << std::endl;
+        std::cout << RED << "User " + std::to_string(friendid) + " is your friend already!" << std::endl;
         std::cout << RESET;
         return;
     }   
@@ -127,6 +127,8 @@ void CmdHandler::confirmFriendRequest(ChatClient* client, const std::string&) {
         switch (choice) {
             case 1: {
                 response["addFriendRequestState"] = kAgree;
+                User newFriend(name, "", "online", userid);
+                client->info_->setFriends(std::move(newFriend));
                 hasChoosed = true;
                 break;
             }

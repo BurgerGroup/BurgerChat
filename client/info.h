@@ -24,8 +24,8 @@ public:
     void setName(const std::string& name) { currentUser_.setName(name); }
     void setPwd(const std::string& pwd) { currentUser_.setPwd(pwd); }
     void setState(const std::string& state) { currentUser_.setState(state); }
-    void addFriends(const User& newFriend) { currentUserFriendList_[newFriend.getId()] = newFriend; } 
-    void addFriends(const std::vector<std::string>& friends) {
+    void setFriends(const User& newFriend) { currentUserFriendList_[newFriend.getId()] = newFriend; } 
+    void setFriends(const std::vector<std::string>& friends) {
         for(const auto& f : friends) {
             json newFriend = json::parse(f);
             UserId id = newFriend["id"].get<UserId>();

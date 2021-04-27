@@ -51,9 +51,9 @@ void ChatService::login(const TcpConnectionPtr &conn, json &js, Timestamp time) 
             }
 
             // 查询该用户是否有离线好友申请
-            std::vector<std::string> offlineList = offlineMsgManager_.query(id);
-            if(!offlineList.empty()) {
-                response["offlineNotify"] = offlineList;
+            std::vector<std::string> offlineNotificationList = offlineNotificationManager_.query(id);
+            if(!offlineNotificationList.empty()) {
+                response["offlineNotify"] = offlineNotificationList;
                 // 读取该用户的离线好友申请后，不会删除掉；在得到确认时才会删除
             }
             

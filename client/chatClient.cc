@@ -49,6 +49,10 @@ void ChatClient::onConnection(const TcpConnectionPtr& conn) {
 
 void ChatClient::onMessage(const TcpConnectionPtr& conn, IBuffer& buf, Timestamp time) {
     std::string msg = buf.retrieveAllAsString();
+    handleMessage(msg);
+}
+
+void ChatClient::handleMessage(const std::string& msg) {
     json response = json::parse(msg);
     std::string parsedMsg;
     int msgid = response["msgid"].get<int>();
@@ -107,18 +111,8 @@ void ChatClient::loginAck(const json& response) {
         // Log in succeed
         std::cout << GREEN << "Login success!" << std::endl;
         setLogInState_(kLoggedIn);
-        
-        // 处理离线信息
-        auto it = response.find("offlinemsg");
-        if(it != response.end()) {
-            std::cout << GREEN << "You have offline messages: " << std::endl;
-            std::vector<std::string> offlinemsgs = response["offlinemsg"];
-            for(const auto& msg : offlinemsgs) {
-                std::cout << BOLDBLUE << msg << std::endl;
-            }
-        }
 
-        it = response.find("offlineNotify");
+        auto it = response.find("offlineNotify");
         if(it != response.end()) {
             std::vector<std::string> offlineNotifications = response["offlineNotify"];
             for(const auto& req : offlineNotifications) {
@@ -134,8 +128,18 @@ void ChatClient::loginAck(const json& response) {
         it = response.find("friends");
         if(it != response.end()) {
             std::vector<std::string> friends = response["friends"];
-            info_->addFriends(friends);
+            info_->setFriends(friends);
         }    
+
+        // 处理离线信息
+        it = response.find("offlinemsg");
+        if(it != response.end()) {
+            std::cout << GREEN << "You have offline messages: " << std::endl;
+            std::vector<std::string> offlinemsgs = response["offlinemsg"];
+            for(const auto& msg : offlinemsgs) { 
+                handleMessage(msg);
+            }
+        }
     }
 }
 
@@ -182,6 +186,5 @@ void ChatClient::addFriendAck(const json& response) {
         }   
     }
 }
-
 
 

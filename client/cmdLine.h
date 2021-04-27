@@ -14,7 +14,7 @@ class CmdHandler {
 public:
     static void help(ChatClient* = nullptr, const std::string& str = "");
     static void chat(ChatClient*, const std::string&);
-    static void addfriend(ChatClient*, const std::string&);
+    static void addFriend(ChatClient*, const std::string&);
     static void confirmFriendRequest(ChatClient*, const std::string& = "");
     // static void creategroup(int, std::string);
     // static void addgroup(int, std::string);
