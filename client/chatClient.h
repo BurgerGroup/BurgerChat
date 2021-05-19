@@ -54,6 +54,7 @@ private:
     void loginAck(const json& response);
     void logoutAck(const json& response);
     void addFriendAck(const json& response);
+    void outputMsg(const std::string& msg, bool append = false) { winManager_->outputMsg(msg, append); }
 
 private:
     EventLoop* loop_;

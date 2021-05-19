@@ -105,11 +105,12 @@ void ChatClient::loginAck(const json& response) {
         // login failed
         // todo : 错误原因可以再细化一下吗？
         std::string errmsg = response["errmsg"];
-        std::cout << RED << errmsg << "Login failed!, Try again..." << std::endl;
+
+        winManager_->outputMsg("Login failed!, Try again...");
         setLogInState_(kNotLoggedIn);
     } else {
         // Log in succeed
-        std::cout << GREEN << "Login success!" << std::endl;
+        winManager_->outputMsg("Login success!");
         setLogInState_(kLoggedIn);
 
         auto it = response.find("offlineNotify");

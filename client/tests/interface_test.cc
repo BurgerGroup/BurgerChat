@@ -24,6 +24,7 @@ void headerRun() {
         ie.Refresh(ie.header_);
     }
 }
+
 void inputRun() {
     std::string point = "Please Enter: ";
     while (1) {

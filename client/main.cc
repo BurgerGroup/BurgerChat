@@ -2,6 +2,7 @@
 #include <burger/net/EventLoopThread.h>
 
 int main() {
+    ONLY_TO_FILE;
     LOGGER("./logs/client.txt");
     LOG_LEVEL_DEBUG;
     InetAddress serverAddr("127.0.0.1", 8888);

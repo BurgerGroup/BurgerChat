@@ -17,21 +17,17 @@ class InterFace {
 public:
     InterFace();
     ~InterFace();
+    
     // 标题窗口绘制
-    void createHeader();
-    // 消息输出框绘制
-    void createOutput();
+    void runHeader();
     // 用户输入框绘制
-    void createInput();
-    // 在线用户列表图形化绘制
-    void createOnlineList();
-    // 从出口中获取数据，并保存在缓冲 buffer 中
-    std::string getStrFromInterFace(WINDOW* w);
-    // 向窗口中放置数据
-    void putStrToInterFace(WINDOW* w, int startY, int startX, const std::string& message);
-    void Refresh(WINDOW* w) { wrefresh(w); }
-    WINDOW* createNewInterFace(int h, int w, int startY, int startX);
-    void clearInterFace(WINDOW* w, int begin, int line);
+    void runInput();
+    // 消息输出框绘制
+    void runOutput();
+
+    void outputMsg(const std::string& message, bool append = false);
+    std::string getInput();
+
 public:
     // 聊天窗口标题句柄
     WINDOW* header_;
@@ -39,8 +35,34 @@ public:
     WINDOW* output_;
     // 用户输入框句柄
     WINDOW* input_;
-    // 在线列表绘制句柄
-    WINDOW* onlinelist_;
-}; // InterFace
+    // // 在线列表绘制句柄
+    // WINDOW* onlinelist_;
+
+private:
+    void createHeader();
+   
+    void createOutput();
+    
+    void createInput();
+    // // 在线用户列表图形化绘制
+    // void createOnlineList();
+    WINDOW* createNewInterFace(int h, int w, int startY, int startX);
+
+    // 从出口中获取数据，并保存在缓冲 buffer 中
+    std::string getStrFromInterFace(WINDOW* w);
+    // 向窗口中放置数据
+    void putStrToInterFace(WINDOW* w, int startY, int startX, const std::string& message);
+
+    void Refresh(WINDOW* w) { wrefresh(w); }
+    void clearWin(WINDOW* w);
+
+    // output 窗口中的坐标值需要记录
+    int outputX_ = 1;
+    int outputY_ = 1;
+    int outputStep_ = 1;
+};
+
+
+ // InterFace
 
 #endif // INCLUDE_INTERFACE_H

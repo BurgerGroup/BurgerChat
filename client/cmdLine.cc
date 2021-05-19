@@ -3,14 +3,14 @@
 #include "color.h"
 
 std::unordered_map<std::string, std::string> CmdHandler::commandMap = {
-    {"help", "显示所有支持的命令，格式help"},
-    {"chat", "一对一聊天，格式chat:friendid:message"},
-    {"addFriend", "添加好友，格式addFriend:friendid"},
-    {"confirmFriendRequest", "查看好友请求，格式confirmFriendRequest"},
-    {"creategroup", "创建群组，格式creategroup:groupname:groupdesc"},
-    {"addgroup", "加入群组，格式addgroup:groupid"},
-    {"groupchat", "群聊，格式groupchat:groupid:message"},
-    {"logout", "注销，格式logout"}
+    {"help", "显示所有支持的命令，格式::help"},
+    {"chat", "一对一聊天，格式:chat:friendid:message"},
+    {"addFriend", "添加好友，格式:addFriend:friendid"},
+    {"confirmFriendRequest", "查看好友请求，格式:confirmFriendRequest"},
+    // {"creategroup", "创建群组，格式:creategroup:groupname:groupdesc"},
+    // {"addgroup", "加入群组，格式:addgroup:groupid"},
+    // {"groupchat", "群聊，格式:groupchat:groupid:message"},
+    {"logout", "注销，格式:logout"}
 };
 
 // 注册系统支持的客户端命令处理
@@ -25,12 +25,13 @@ std::unordered_map<std::string, std::function<void(ChatClient* , const std::stri
     {"logout", CmdHandler::logout}
 };
 
-void CmdHandler::help(ChatClient*, const std::string& str) {
-    std::cout << GREEN << "show command list >>> " << std::endl;
+void CmdHandler::help(ChatClient* client, const std::string& str) {
+    client->outputMsg(">> show command list: ");
+    std::cout << "1111" << std::endl;
     for (auto &p : commandMap) {
-        std::cout << GREEN << p.first << " : " << p.second << std::endl;
+        std::string msg = p.first + ":" + p.second;
+        client->outputMsg(msg, true);
     }
-    std::cout << std::endl;
 }
 
 void CmdHandler::chat(ChatClient* client, const std::string& msg) {

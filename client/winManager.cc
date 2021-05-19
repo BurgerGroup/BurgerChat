@@ -1,11 +1,17 @@
 #include "winManager.h"
 #include "chatClient.h"
+#include <burger/base/Log.h>
 #include "cmdLine.h"
 #include "color.h"
 
 WinManager::WinManager(ChatClient* chatClient)
     : chatClient_(chatClient),
+      interface_(util::make_unique<InterFace>()),
       quit_(false)  {
+    DEBUG("WinManager ctor.");
+    interface_->runHeader();
+    interface_->runInput();
+    interface_->runOutput();
 }
 
 WinManager::~WinManager() {
@@ -16,11 +22,9 @@ void WinManager::start() {
     int notifyTimes = 0;
     while(!quit_) {
         if(chatClient_->logInState_ == ChatClient::LogInState::kNotLoggedIn) {
-            std::cout << GREEN << ">> 1. login 2. signup 3. exit <<" << std::endl; 
-            std::cout << GREEN << ">> ";
-            std::cout << RESET;
-            std::string input;
-            std::getline(std::cin, input);
+            outputMsg(">> Enter Your Choice: 1. login 2. signup 3. exit");
+
+            std::string input = getInput();
             int choice = atoi(input.c_str());
             // todo : 解决缓冲区问题
             switch (choice) {
@@ -33,15 +37,14 @@ void WinManager::start() {
                     break;
                 }
                 case 3: {
-                    std::cout << GREEN << "Bye!" << std::endl;
+                    outputMsg(">> Bye!");
                     chatClient_->getClient()->disconnect();
                     quit_ = true;
-                    std::cout << RESET;
                     exit(0);
                     break;
                 } 
                 default: {
-                    std::cout << RED << "Invalid input!" << std::endl;
+                    outputMsg(">> Invalid input!");
                     break;
                 }
             }
@@ -49,7 +52,7 @@ void WinManager::start() {
         else if(chatClient_->logInState_ == ChatClient::LogInState::kLogging) {
             // TODO : 改成condition_variable
             if(notifyTimes < 1) {    // TODO: 如果一直都是在Logging没有返回怎么处理？
-                std::cout << GREEN << "Logging IN/OUT.....Please Wait......" << std::endl;
+                outputMsg(">> Logging IN/OUT.....Please Wait......");
                 ++notifyTimes;
             }
         }
@@ -61,15 +64,11 @@ void WinManager::start() {
 }
 
 void WinManager::signup() {
-    std::cout << GREEN << ">> Sign Up << " << std::endl;
-    char name[50] = {0};
-    char pwd[50] = {0};
-    std::cout << GREEN << "Username: ";    // todo: 此处增加判断名字合法否
-    std::cout << RESET;
-    std::cin.getline(name, 50);   // todo : 此处用sstream是否更好
-    std::cout << GREEN << "Password: ";
-    std::cout << RESET;
-    std::cin.getline(pwd, 50);
+    outputMsg(">> Sign Up ");
+    outputMsg(">> Username");    // todo: 此处增加判断名字合法否
+    std::string name = getInput();  // todo : 此处用sstream是否更好
+    outputMsg(">> Password");
+    std::string pwd = getInput();
 
     json js;
     js["msgid"] = REG_MSG;
@@ -85,15 +84,14 @@ void WinManager::login() {
     chatClient_->setLogInState_(ChatClient::LogInState::kLogging);
     std::string idStr;
     int id = 0;
-    // char pwd[50] = {0};
     std::string pwd;
 
     while(true) {
-        std::cout << GREEN << "ID number: ";
-        std::cout << RESET;
+        outputMsg(">> Input Your ID number");
         // std::cin >> id;
         // std::cin.get(); // 读掉缓冲区残留的回车
-        std::getline(std::cin, idStr);
+        // std::getline(std::cin, idStr);
+        idStr = getInput();
         id = atoi(idStr.c_str());
         // while (std::cin.fail()) {
         //     std::cin.clear();
@@ -105,9 +103,11 @@ void WinManager::login() {
         }
         break;
     }
-    std::cout << GREEN << "Password: ";
-    std::cout << RESET;
-    std::getline(std::cin, pwd);
+    // outputMsg("Password: ";
+    // 
+    outputMsg(">> Input Your Password");
+    // std::getline(std::cin, pwd);
+    pwd = getInput();
 
     chatClient_->info_->setId(id);
     chatClient_->info_->setPwd(pwd);
@@ -122,15 +122,14 @@ void WinManager::login() {
 }
 
 void WinManager::mainMenu() {
-    std::cout << GREEN << ">> Main Menu <<" << std::endl; 
-    std::cout << ">> Enter 'help' to get help <<" << std::endl; 
     while(chatClient_->logInState_ == ChatClient::kLoggedIn) {
-        std::cout << GREEN << ">> Enter Your Choice <<" << std::endl; 
-        std::cout << RESET;
-        std::string input;
+        outputMsg(">> Enter Your Choice (Enter 'help' to get help)");
+
+        std::string input = getInput();
         std::string action;
         std::string content;
-        std::getline(std::cin, input);
+        
+        // std::getline(std::cin, input);
 
         size_t end = input.find(':');
         if(end == input.npos) {
@@ -143,7 +142,7 @@ void WinManager::mainMenu() {
 
         if(CmdHandler::commandMap.find(action) == CmdHandler::commandMap.end()) {
             std::cout << RED << ">> Invalid input!!!! <<" << std::endl; 
-            std::cout << RESET;
+            
         }
         else {
             auto func = CmdHandler::commandHandlerMap[action];
@@ -151,4 +150,3 @@ void WinManager::mainMenu() {
         }
     }
 }
-

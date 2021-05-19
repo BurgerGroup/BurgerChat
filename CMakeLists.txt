@@ -21,6 +21,8 @@ set(CXX_FLAGS
  -Wconversion
  -Wno-unused-parameter
  -Wno-unused-but-set-variable
+ -Wno-unused-variable
+ -Wno-unused-result
  -Wold-style-cast
  -Woverloaded-virtual
  -Wpointer-arith
@@ -48,7 +50,7 @@ set(CMAKE_CXX_FLAGS_DEBUG "-O0")
 set(CMAKE_CXX_FLAGS_RELEASE "-O2 -DNDEBUG")
 
 
-# find_package(Curses REQUIRED)
+find_package(Curses REQUIRED)
 
 # https://www.jianshu.com/p/f181b5bd0a63 这里需要更好的组织方式
 include_directories(${CURSES_INCLUDE_DIR})
@@ -70,6 +72,7 @@ add_subdirectory(${PROJECT_SOURCE_DIR}/3rdparty/Burger/burger/base)
 add_subdirectory(${PROJECT_SOURCE_DIR}/3rdparty/Burger/burger/net)
 add_subdirectory(${PROJECT_SOURCE_DIR}/3rdparty/Burger/burger/db)
 add_subdirectory(${PROJECT_SOURCE_DIR}/3rdparty/Burger/thirdparty/googletest)
+add_subdirectory(${PROJECT_SOURCE_DIR}/3rdparty/Burger/thirdparty/spdlog)
 add_subdirectory(${PROJECT_SOURCE_DIR}/client)
 add_subdirectory(${PROJECT_SOURCE_DIR}/server)
 add_subdirectory(${PROJECT_SOURCE_DIR}/model)
