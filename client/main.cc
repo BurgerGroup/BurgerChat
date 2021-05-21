@@ -1,7 +1,10 @@
 #include "chatClient.h"
+#include <ncurses.h>
+#include <locale.h>
 #include <burger/net/EventLoopThread.h>
 
 int main() {
+    setlocale(LC_ALL,"");  // 使ncurses支持中文
     ONLY_TO_FILE;
     LOGGER("./logs/client.txt");
     LOG_LEVEL_DEBUG;

@@ -22,6 +22,7 @@ void WinManager::start() {
     int notifyTimes = 0;
     while(!quit_) {
         if(chatClient_->logInState_ == ChatClient::LogInState::kNotLoggedIn) {
+            interface_->changeHeader();
             outputMsg(">> Enter Your Choice: 1. login 2. signup 3. exit");
 
             std::string input = getInput();
@@ -40,11 +41,12 @@ void WinManager::start() {
                     outputMsg(">> Bye!");
                     chatClient_->getClient()->disconnect();
                     quit_ = true;
+                    interface_.reset();
                     exit(0);
                     break;
                 } 
                 default: {
-                    outputMsg(">> Invalid input!");
+                    outputMsg(">> Invalid input!", "RED");
                     break;
                 }
             }
@@ -88,26 +90,20 @@ void WinManager::login() {
 
     while(true) {
         outputMsg(">> Input Your ID number");
-        // std::cin >> id;
-        // std::cin.get(); // 读掉缓冲区残留的回车
-        // std::getline(std::cin, idStr);
         idStr = getInput();
         id = atoi(idStr.c_str());
-        // while (std::cin.fail()) {
-        //     std::cin.clear();
-        //     std::cin.ignore();
-        // }
         if (id <= 0) {
-            std::cout << RED << "Invalid ID!" << std::endl;
+            outputMsg("Invalid ID!", "RED");
             continue;
         }
         break;
     }
-    // outputMsg("Password: ";
-    // 
+
     outputMsg(">> Input Your Password");
-    // std::getline(std::cin, pwd);
+
+    noecho();  // 输入密码不显示
     pwd = getInput();
+    echo();
 
     chatClient_->info_->setId(id);
     chatClient_->info_->setPwd(pwd);
@@ -122,8 +118,8 @@ void WinManager::login() {
 }
 
 void WinManager::mainMenu() {
+    interface_->changeHeader("Enter Your Choice (Enter 'help' to get help)");
     while(chatClient_->logInState_ == ChatClient::kLoggedIn) {
-        outputMsg(">> Enter Your Choice (Enter 'help' to get help)");
 
         std::string input = getInput();
         std::string action;
@@ -141,7 +137,7 @@ void WinManager::mainMenu() {
         }   
 
         if(CmdHandler::commandMap.find(action) == CmdHandler::commandMap.end()) {
-            std::cout << RED << ">> Invalid input!!!! <<" << std::endl; 
+           outputMsg(">> Invalid input!!!!", "RED"); 
             
         }
         else {

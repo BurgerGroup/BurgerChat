@@ -50,10 +50,9 @@ set(CMAKE_CXX_FLAGS_DEBUG "-O0")
 set(CMAKE_CXX_FLAGS_RELEASE "-O2 -DNDEBUG")
 
 
-find_package(Curses REQUIRED)
 
 # https://www.jianshu.com/p/f181b5bd0a63 这里需要更好的组织方式
-include_directories(${CURSES_INCLUDE_DIR})
+include_directories(${NCURSESW_INCLUDE_DIR})
 include_directories(${PROJECT_SOURCE_DIR}/3rdparty)
 include_directories(${PROJECT_SOURCE_DIR}/3rdparty/Burger)
 include_directories(${PROJECT_SOURCE_DIR}/3rdparty/Burger/thirdparty)
@@ -61,7 +60,7 @@ include_directories(${PROJECT_SOURCE_DIR}/client)
 include_directories(${PROJECT_SOURCE_DIR}/common)
 include_directories(${PROJECT_SOURCE_DIR}/server)
 include_directories(${PROJECT_SOURCE_DIR}/model)
-include_directories(/usr/include)
+include_directories(/usr/include/ncursesw)
 
 link_directories(${PROJECT_SOURCE_DIR}/lib)
 

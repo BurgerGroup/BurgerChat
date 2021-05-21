@@ -86,3 +86,39 @@
 2021-04-26 13:04:41 [info] [tid : 4195] [TcpClient.cc : 39 <TcpClient>] [coId : 0] TcpClient::TcpClient[ChatClient] - connector 0x2507500
 2021-04-26 13:04:41 [info] [tid : 4195] [TcpClient.cc : 73 <connect>] [coId : 0] TcpClient::connect[ChatClient] - connecting to 127.0.0.1:8888
 2021-04-26 13:04:41 [debug] [tid : 4195] [TcpConnection.cc : 40 <TcpConnection>] [coId : 0] TcpConnection::ctor[ ChatClient:127.0.0.1:8888#1 ] at 0x2509bf0 fd = 7 
+2021-05-20 00:54:32 [debug] [tid : 61] [Connector.cc : 17 <Connector>] [coId : 0] ctor[0x1a5d130]
+2021-05-20 00:54:32 [info] [tid : 61] [TcpClient.cc : 39 <TcpClient>] [coId : 0] TcpClient::TcpClient[ChatClient] - connector 0x1a5d130
+2021-05-20 00:54:32 [debug] [tid : 61] [winManager.cc : 11 <WinManager>] [coId : 0] WinManager ctor.
+2021-05-20 00:54:32 [info] [tid : 61] [TcpClient.cc : 73 <connect>] [coId : 0] TcpClient::connect[ChatClient] - connecting to 127.0.0.1:8888
+2021-05-20 00:54:32 [debug] [tid : 61] [TcpConnection.cc : 40 <TcpConnection>] [coId : 0] TcpConnection::ctor[ ChatClient:127.0.0.1:8888#1 ] at 0x1a71610 fd = 7 
+2021-05-20 00:54:40 [debug] [tid : 68] [Connector.cc : 17 <Connector>] [coId : 0] ctor[0x17d3130]
+2021-05-20 00:54:40 [info] [tid : 68] [TcpClient.cc : 39 <TcpClient>] [coId : 0] TcpClient::TcpClient[ChatClient] - connector 0x17d3130
+2021-05-20 00:54:40 [debug] [tid : 68] [winManager.cc : 11 <WinManager>] [coId : 0] WinManager ctor.
+2021-05-20 00:54:40 [info] [tid : 68] [TcpClient.cc : 73 <connect>] [coId : 0] TcpClient::connect[ChatClient] - connecting to 127.0.0.1:8888
+2021-05-20 00:54:40 [debug] [tid : 68] [TcpConnection.cc : 40 <TcpConnection>] [coId : 0] TcpConnection::ctor[ ChatClient:127.0.0.1:8888#1 ] at 0x17f01f0 fd = 7 
+2021-05-20 00:54:47 [debug] [tid : 68] [TcpConnection.cc : 46 <~TcpConnection>] [coId : 0] TcpConnection::dtor[ ChatClient:127.0.0.1:8888#1 ] at 0x17f01f0 fd = 7 status = kDisconnected 
+2021-05-20 00:55:12 [debug] [tid : 527] [Connector.cc : 17 <Connector>] [coId : 0] ctor[0x19c1130]
+2021-05-20 00:55:12 [info] [tid : 527] [TcpClient.cc : 39 <TcpClient>] [coId : 0] TcpClient::TcpClient[ChatClient] - connector 0x19c1130
+2021-05-20 00:55:12 [debug] [tid : 527] [winManager.cc : 11 <WinManager>] [coId : 0] WinManager ctor.
+2021-05-20 00:55:12 [info] [tid : 527] [TcpClient.cc : 73 <connect>] [coId : 0] TcpClient::connect[ChatClient] - connecting to 127.0.0.1:8888
+2021-05-20 00:55:12 [warning] [tid : 527] [Channel.cc : 83 <handleEventWithGuard>] [coId : 0] fd = 7  Channel::handle_event EPOLLHUP
+2021-05-20 00:55:12 [error] [tid : 527] [Connector.cc : 160 <handleError>] [coId : 0] Connector::handleError state= 1
+2021-05-20 00:55:12 [info] [tid : 527] [Connector.cc : 175 <retry>] [coId : 0] Connector::retry - Retry connecting to 127.0.0.1:8888 in 500 milliseconds
+2021-05-20 00:55:12 [warning] [tid : 527] [Channel.cc : 83 <handleEventWithGuard>] [coId : 0] fd = 7  Channel::handle_event EPOLLHUP
+2021-05-20 00:55:12 [error] [tid : 527] [Connector.cc : 160 <handleError>] [coId : 0] Connector::handleError state= 1
+2021-05-20 00:55:12 [info] [tid : 527] [Connector.cc : 175 <retry>] [coId : 0] Connector::retry - Retry connecting to 127.0.0.1:8888 in 1000 milliseconds
+2021-05-20 00:55:13 [warning] [tid : 527] [Channel.cc : 83 <handleEventWithGuard>] [coId : 0] fd = 7  Channel::handle_event EPOLLHUP
+2021-05-20 00:55:13 [error] [tid : 527] [Connector.cc : 160 <handleError>] [coId : 0] Connector::handleError state= 1
+2021-05-20 00:55:13 [info] [tid : 527] [Connector.cc : 175 <retry>] [coId : 0] Connector::retry - Retry connecting to 127.0.0.1:8888 in 2000 milliseconds
+2021-05-20 00:55:15 [warning] [tid : 527] [Channel.cc : 83 <handleEventWithGuard>] [coId : 0] fd = 7  Channel::handle_event EPOLLHUP
+2021-05-20 00:55:15 [error] [tid : 527] [Connector.cc : 160 <handleError>] [coId : 0] Connector::handleError state= 1
+2021-05-20 00:55:29 [debug] [tid : 543] [Connector.cc : 17 <Connector>] [coId : 0] ctor[0x265c130]
+2021-05-20 00:55:29 [info] [tid : 543] [TcpClient.cc : 39 <TcpClient>] [coId : 0] TcpClient::TcpClient[ChatClient] - connector 0x265c130
+2021-05-20 00:55:29 [debug] [tid : 543] [winManager.cc : 11 <WinManager>] [coId : 0] WinManager ctor.
+2021-05-20 00:55:29 [info] [tid : 543] [TcpClient.cc : 73 <connect>] [coId : 0] TcpClient::connect[ChatClient] - connecting to 127.0.0.1:8888
+2021-05-20 00:55:29 [debug] [tid : 543] [TcpConnection.cc : 40 <TcpConnection>] [coId : 0] TcpConnection::ctor[ ChatClient:127.0.0.1:8888#1 ] at 0x26791f0 fd = 7 
+2021-05-20 00:56:50 [debug] [tid : 563] [Connector.cc : 17 <Connector>] [coId : 0] ctor[0x18d5130]
+2021-05-20 00:56:50 [info] [tid : 563] [TcpClient.cc : 39 <TcpClient>] [coId : 0] TcpClient::TcpClient[ChatClient] - connector 0x18d5130
+2021-05-20 00:56:50 [debug] [tid : 563] [winManager.cc : 11 <WinManager>] [coId : 0] WinManager ctor.
+2021-05-20 00:56:50 [info] [tid : 563] [TcpClient.cc : 73 <connect>] [coId : 0] TcpClient::connect[ChatClient] - connecting to 127.0.0.1:8888
+2021-05-20 00:56:50 [debug] [tid : 563] [TcpConnection.cc : 40 <TcpConnection>] [coId : 0] TcpConnection::ctor[ ChatClient:127.0.0.1:8888#1 ] at 0x18f21f0 fd = 7 

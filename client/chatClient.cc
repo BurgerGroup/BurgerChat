@@ -60,13 +60,12 @@ void ChatClient::handleMessage(const std::string& msg) {
         parsedMsg += response["from"];
         parsedMsg += " says: ";
         parsedMsg += response["msg"];
-        std::cout << BOLDBLUE << parsedMsg << std::endl;
-        std::cout << RESET;
+        outputMsg(parsedMsg);
     }
     else {
         auto it = idMsgHandlerMap_.find(msgid);
         if (it == idMsgHandlerMap_.end()) {  // not find
-            std::cout << BOLDBLUE << "other msg type" << std::endl;
+            outputMsg("Received Unknown type of Message!");
             ERROR("msgid : {} ChatClient can't find handler", msgid);
         } else {
             auto msgHandler = idMsgHandlerMap_[msgid];
@@ -80,7 +79,7 @@ void ChatClient::send(const std::string& msg) {
     if(connection_) {
         connection_->send(msg);
     } else {
-        std::cout << RED << "connection doesn't exist" << std::endl;
+        outputMsg("connection doesn't exist");
         ERROR("connection doesn't exist");
     }
 }
@@ -89,13 +88,16 @@ void ChatClient::signupAck(const json& response) {
     if (response["errno"].get<int>() != 0) {
         // Sign up failed
         // todo : 错误原因可以再细化一下吗？
-        std::string name = response["name"];
-        std::cout << RED << name << "Register failed!, Try again..." << std::endl;
+        outputMsg("Register failed!Try again...");
         winManager_->signup();
-    } else {
-    // Sign up succeed
-    std::cout << GREEN << "Sign up success, your user ID is: " << response["id"]
-        << ", do not forget it!" << std::endl;
+    } 
+    else {
+        // Sign up succeed
+        std::string msg = "";
+        msg += "Sign up success, your user ID is: ";
+        msg += response["id"];
+        msg += ", do not forget it!";
+        outputMsg(msg);
         winManager_->login();
     }
 }
@@ -135,7 +137,7 @@ void ChatClient::loginAck(const json& response) {
         // 处理离线信息
         it = response.find("offlinemsg");
         if(it != response.end()) {
-            std::cout << GREEN << "You have offline messages: " << std::endl;
+            outputMsg("You have offline messages: ");
             std::vector<std::string> offlinemsgs = response["offlinemsg"];
             for(const auto& msg : offlinemsgs) { 
                 handleMessage(msg);
@@ -149,11 +151,11 @@ void ChatClient::logoutAck(const json& response) {
         // logout failed
         // todo : 错误原因可以再细化一下吗？
         std::string errmsg = response["errmsg"];
-        std::cout << RED << errmsg << "Logout failed!, Try again..." << std::endl;
+        outputMsg("Logout failed!, Try again...");
         setLogInState_(kLoggedIn);
     } else {
         // Log out succeed
-        std::cout << GREEN << "Logout success!" << std::endl;
+        outputMsg("Logout success!");
         setLogInState_(kNotLoggedIn);
         info_->setState("offline");    
     }
@@ -164,26 +166,28 @@ void ChatClient::addFriendAck(const json& response) {
         // add failed
         // todo : 错误原因可以再细化一下吗？
         std::string errmsg = response["errmsg"];
-        std::cout << RED << errmsg << "Add Friend failed!" << std::endl;
+        outputMsg("Add Friend failed!");
     } else {
         auto state = addFriendRequestState(response["addFriendRequestState"]);
         if (state == kApply) {
             friendRequests_.push(std::move(response));
-            std::cout << YELLOW << "You have a new friend request!!!" 
-                     << friendRequests_.size() << " request(s) in total." << std::endl;
-            std::cout << RESET;
+            outputMsg("You have a new friend request!!!", "YELLOW");
+            std::string msg = std::to_string(friendRequests_.size());
+            msg += " request(s) in total.";
+            outputMsg(msg, "YELLOW", true);
         }
         else if(state == kAgree) {
-            std::cout << YELLOW << response["friendid"] << " now is your friend!" << std::endl;
-            std::cout << RESET;
+            std::string msg(response["friendid"]);
+            msg += " now is your friend!";
+            outputMsg(msg);
         }
         else if(state == kRefuse) {
-            std::cout << RED << response["friendid"] << " refuses to be your friend!" << std::endl;
-            std::cout << RESET;
+            std::string msg(response["friendid"]);
+            msg += " refuses to be your friend!";
+            outputMsg(msg);
         }
         else {   // what?
-            std::cout << RED << "Unknown response!" << std::endl;
-            std::cout << RESET;
+            outputMsg("Unknown response!");
         }   
     }
 }

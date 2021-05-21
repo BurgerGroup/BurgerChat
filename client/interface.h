@@ -12,6 +12,7 @@
 #include <stdlib.h>
 #include <ncurses.h>
 #include <string>
+#include <map>
 
 class InterFace {
 public:
@@ -25,8 +26,11 @@ public:
     // 消息输出框绘制
     void runOutput();
 
-    void outputMsg(const std::string& message, bool append = false);
+    void outputMsg(const std::string& message, const std::string& color = "GREEN", bool append = false);
     std::string getInput();
+
+    void changeHeader(const std::string& message = "Welcome To BurgetChat!", const std::string& color = "GREEN");
+    void clearWin(WINDOW* w);
 
 public:
     // 聊天窗口标题句柄
@@ -54,12 +58,13 @@ private:
     void putStrToInterFace(WINDOW* w, int startY, int startX, const std::string& message);
 
     void Refresh(WINDOW* w) { wrefresh(w); }
-    void clearWin(WINDOW* w);
 
     // output 窗口中的坐标值需要记录
     int outputX_ = 1;
     int outputY_ = 1;
     int outputStep_ = 1;
+
+    std::map<std::string, int> colors_;
 };
 
 

@@ -3,14 +3,16 @@
 #include "color.h"
 
 std::unordered_map<std::string, std::string> CmdHandler::commandMap = {
-    {"help", "显示所有支持的命令，格式::help"},
-    {"chat", "一对一聊天，格式:chat:friendid:message"},
-    {"addFriend", "添加好友，格式:addFriend:friendid"},
-    {"confirmFriendRequest", "查看好友请求，格式:confirmFriendRequest"},
+    // {"help", "显示所有支持的命令，格式:help"},
+    {"help", "Show command list, usage: help"},
+    {"chat", "Chat to one friend, usage: chat:friendid:message"},
+    {"addFriend", "Add new friend, usage: addFriend:friendid"},
+    {"confirmFriendRequest", "Handle friend requests, usage: confirmFriendRequest"},
     // {"creategroup", "创建群组，格式:creategroup:groupname:groupdesc"},
     // {"addgroup", "加入群组，格式:addgroup:groupid"},
     // {"groupchat", "群聊，格式:groupchat:groupid:message"},
-    {"logout", "注销，格式:logout"}
+    {"logout", "LogOut, usage: logout"},
+    {"clear", "Clear the Output win, usage: clear"}
 };
 
 // 注册系统支持的客户端命令处理
@@ -22,15 +24,15 @@ std::unordered_map<std::string, std::function<void(ChatClient* , const std::stri
     // {"creategroup", CmdHandler::creategroup},
     // {"addgroup", CmdHandler::addgroup},
     // {"groupchat", CmdHandler::groupchat},
-    {"logout", CmdHandler::logout}
+    {"logout", CmdHandler::logout},
+    {"clear", CmdHandler::clear}
 };
 
 void CmdHandler::help(ChatClient* client, const std::string& str) {
-    client->outputMsg(">> show command list: ");
-    std::cout << "1111" << std::endl;
+    client->outputMsg(">> Show Command List: ");
     for (auto &p : commandMap) {
-        std::string msg = p.first + ":" + p.second;
-        client->outputMsg(msg, true);
+        std::string msg = p.first + " >>>> " + p.second;
+        client->outputMsg(msg, "GREEN", true);
     }
 }
 
@@ -152,4 +154,8 @@ void CmdHandler::confirmFriendRequest(ChatClient* client, const std::string&) {
     }
     std::string content = response.dump();
     client->send(std::move(content));
+}
+
+void CmdHandler::clear(ChatClient* client, const std::string&) {
+    client->winManager_->clearOutPut();
 }

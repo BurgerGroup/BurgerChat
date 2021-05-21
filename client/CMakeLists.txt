@@ -7,6 +7,6 @@ set(client_SRCS
 )
 
 add_executable(chatClient ${client_SRCS})
-target_link_libraries(chatClient burger_base burger_net chat_model pthread rt ncurses)
+target_link_libraries(chatClient burger_base burger_net chat_model pthread rt ncursesw)
 
-add_subdirectory(tests)
+# add_subdirectory(tests)
