@@ -59,8 +59,9 @@ void ChatClient::handleMessage(const std::string& msg) {
     if(msgid == ONE_CHAT_MSG) {
         parsedMsg += response["from"];
         parsedMsg += " says: ";
-        parsedMsg += response["msg"];
         outputMsg(parsedMsg);
+        parsedMsg = response["msg"];
+        outputMsg(parsedMsg, "YELLOW", true);
     }
     else {
         auto it = idMsgHandlerMap_.find(msgid);
@@ -121,7 +122,7 @@ void ChatClient::loginAck(const json& response) {
             for(const auto& req : offlineNotifications) {
                 friendRequests_.push(json::parse(req));
             }
-            std::cout << YELLOW << "You have " << friendRequests_.size() <<" offline new friend requests!" << std::endl;
+            winManager_->outputMsg("You have offline new friend requests!", "YELLOW");
         }
         
         // 设置用户信息

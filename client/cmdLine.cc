@@ -39,14 +39,14 @@ void CmdHandler::help(ChatClient* client, const std::string& str) {
 void CmdHandler::chat(ChatClient* client, const std::string& msg) {
     size_t idx = msg.find(":"); // friendid:message
     if (idx == msg.npos) {
-        std::cout << RED << "chat command invalid!" << std::endl;
+        client->outputMsg(">> Chat Command Invalid!", "RED");
         return;
     }
 
     UserId friendid = atoi(msg.substr(0, idx).c_str());  // boost::lexical_cast
 
     if(!client->info_->hasFriend(friendid)) {
-        std::cout << RED << "This User is not your friend yet!!" << std::endl;
+        client->outputMsg(">> This User is not your friend yet!!", "RED");
         return;
     }
 
@@ -86,8 +86,10 @@ void CmdHandler::addFriend(ChatClient* client, const std::string& msg) {
 
     // 如果已经是好友，直接返回提示消息即可
     if(client->info_->hasFriend(friendid)) {
-        std::cout << RED << "User " + std::to_string(friendid) + " is your friend already!" << std::endl;
-        std::cout << RESET;
+        std::string m("User [");
+        m += std::to_string(friendid) + "] is your friend already!";
+
+        client->outputMsg(m, "RED");
         return;
     }   
 
@@ -106,11 +108,14 @@ void CmdHandler::addFriend(ChatClient* client, const std::string& msg) {
 
 void CmdHandler::confirmFriendRequest(ChatClient* client, const std::string&) {
     if(client->friendRequests_.empty()) {
-        std::cout << YELLOW << "You don't have any new friend requests!!!" << std::endl;
+        client->outputMsg(">> You don't have any new friend requests!!!", "YELLOW");
         return;
     }
 
-    std::cout << YELLOW << "You have " << client->friendRequests_.size() <<" new friend requests in total!" << std::endl;
+    std::string msg(">> You have ");
+    msg += std::to_string(client->friendRequests_.size()) + " new friend requests in total!";
+    client->outputMsg(msg, "YELLOW");
+
     auto request = std::move(client->friendRequests_.front());
     client->friendRequests_.pop();
 
@@ -119,13 +124,13 @@ void CmdHandler::confirmFriendRequest(ChatClient* client, const std::string&) {
 
     json response(request);
     bool hasChoosed = false;
-    while(!hasChoosed) {
-        std::cout << YELLOW << userid << " (" << name << ")" << " wants to MAKE FRIEND with you!!!" << std::endl;
-        std::cout << ">>> Input : 1.Agree  2.Refuse  3.Handle it later... <<< " << std::endl;
-        std::cout << RESET;
+    while(!hasChoosed) {    
+        msg = std::to_string(userid) + " (" + name + ")" + " wants to MAKE FRIEND with you!!!";
 
-        std::string input;
-        std::getline(std::cin, input);
+        client->outputMsg(msg, "YELLOW");
+        client->outputMsg(">> Input : 1.Agree  2.Refuse  3.Handle it later... ", "YELLOW", true);
+
+        std::string input = client->winManager_->getInput();
         int choice = atoi(input.c_str());
         switch (choice) {
             case 1: {

@@ -125,8 +125,6 @@ void WinManager::mainMenu() {
         std::string action;
         std::string content;
         
-        // std::getline(std::cin, input);
-
         size_t end = input.find(':');
         if(end == input.npos) {
             action = input;
