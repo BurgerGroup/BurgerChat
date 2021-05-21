@@ -10,6 +10,7 @@ FriendManager::FriendManager(std::string host, std::string user,
 
 bool FriendManager::addFriendship(UserId smaller_id, UserId greater_id) {
     if(smaller_id == greater_id) return false;
+    if(isFriend(smaller_id, greater_id)) return false;
     if(smaller_id > greater_id) {
         std::swap(smaller_id, greater_id);
     }
@@ -101,6 +102,23 @@ std::vector<User> FriendManager::query(UserId userid) {
 
     stmt->bind(1, userid);
     auto stmtRes = stmt->query();
+    while(stmtRes->next()) {
+        User user;
+        user.setId(stmtRes->getInt64(0));
+        user.setName(stmtRes->getString(1));
+        user.setState(stmtRes->getString(2));
+        vec.emplace_back(user);
+    }
+
+    sql = "select a.id,a.name,a.state from User a inner join Friend b on b.userid = a.id where b.friendid=?";
+    stmt = mysql->prepare(sql);
+    if(!stmt) {
+        ERROR("stmt = {} errno = {} errstr = {}", sql, mysql->getErrno(), mysql->getErrStr());
+        return vec;
+    }
+
+    stmt->bind(1, userid);
+    stmtRes = stmt->query();
     while(stmtRes->next()) {
         User user;
         user.setId(stmtRes->getInt64(0));

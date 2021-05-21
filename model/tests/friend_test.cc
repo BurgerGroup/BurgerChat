@@ -26,6 +26,13 @@ void test_friend_add() {
     }
 }
 
+void test_friend_query() {
+    auto vec = fm.query(3);
+    for(auto& user : vec) {
+        std::cout << user.getId() << std::endl;
+    }
+}
+
 void test_friend_release() {
     User u1 = um.query(1);
     User u2 = um.query(2);
@@ -44,6 +51,7 @@ void test_friend_release() {
 
 int main() {
     test_friend_add();
+    test_friend_query();
     // test_friend_release();
     return 0;
 }
