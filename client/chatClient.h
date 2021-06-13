@@ -66,7 +66,7 @@ private:
     TcpConnectionPtr connection_;
     std::unique_ptr<WinManager> winManager_;
     std::thread interactiveThread_;
-    std::shared_ptr<Info> info_;  // todo : 理一下这里是否可以unique_ptr
+    std::shared_ptr<Info> info_; 
     std::unordered_map<int, MsgHandler> idMsgHandlerMap_;
     std::queue<json> friendRequests_;
 };

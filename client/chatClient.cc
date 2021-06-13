@@ -96,7 +96,7 @@ void ChatClient::signupAck(const json& response) {
         msg += std::to_string(response["id"].get<UserId>());
         msg += ", do not forget it!";
         outputMsg(msg);
-        outputMsg("Press a key to continue");
+        outputMsg("Press a key to continue", true);
         std::cin.get();
         winManager_->login();
     }
@@ -105,10 +105,11 @@ void ChatClient::signupAck(const json& response) {
 void ChatClient::loginAck(const json& response) {
     if (response["errno"].get<int>() != 0) {
         // login failed
-        // todo : 错误原因可以再细化一下吗？
         std::string errmsg = response["errmsg"];
-
-        winManager_->outputMsg("Login failed!, Try again...");
+        winManager_->outputMsg("Login failed!");
+        winManager_->outputMsg(errmsg, true);
+        winManager_->outputMsg("Press any key to try again...", true);
+        std::cin.get();
         setLogInState_(kNotLoggedIn);
     } else {
         // Log in succeed

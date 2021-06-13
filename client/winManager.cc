@@ -105,6 +105,7 @@ void WinManager::signup() {
 
 void WinManager::login() {
     chatClient_->setLogInState_(ChatClient::LogInState::kLogging);
+    interface_->changeHeader("Log In");
     std::string idStr;
     int id = 0;
     std::string pwd;
@@ -112,9 +113,14 @@ void WinManager::login() {
     while(true) {
         outputMsg(">> Input Your ID number");
         idStr = getInput();
-        id = atoi(idStr.c_str());
+        try {  
+            id = boost::lexical_cast<int>(idStr);  
+        } catch(boost::bad_lexical_cast& e) {  
+            ERROR("{}", e.what());
+        }
         if (id <= 0) {
-            outputMsg("Invalid ID!", "RED");
+            outputMsg("Invalid ID! Press any Key to try again", "RED");
+            std::cin.get();
             continue;
         }
         break;
@@ -122,19 +128,20 @@ void WinManager::login() {
 
     outputMsg(">> Input Your Password");
 
-    noecho();  // 输入密码不显示
+    noecho();  // 输入密码不显示 // todo : **** 形式? 
     pwd = getInput();
     echo();
 
     chatClient_->info_->setId(id);
-    chatClient_->info_->setPwd(pwd);
+    chatClient_->info_->setPwd(pwd); 
 
     json js;
     js["msgid"] = LOGIN_MSG;
     js["id"] = id;
-    js["password"] = pwd.c_str();
+    js["password"] = pwd;
     std::string request = js.dump();
     // std::cout << request << std::endl; // for test
+    TRACE("request : {}", request);
     chatClient_->send(request);
 }
 
