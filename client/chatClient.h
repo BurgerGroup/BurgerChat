@@ -22,6 +22,7 @@ using namespace burger::net;
 class WinManager;
 class Info;
 class CmdHandler;
+
 class ChatClient {
     friend class WinManager;
     friend class CmdHandler;

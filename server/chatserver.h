@@ -18,7 +18,6 @@ public:
     void start();
 private:
     void connHandler(const CoTcpConnection::ptr& conn);
-
 private:
     CoTcpServer server_; 
     Scheduler *sched_;  

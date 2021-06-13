@@ -8,7 +8,7 @@ using namespace burger;
 using namespace burger::db;
 
 UserManager um;
-FriendManager fm("127.0.0.1", "root", "PWD");
+FriendManager fm;
 
 void test_friend_add() {
     User u1 = um.query(2);

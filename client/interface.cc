@@ -80,8 +80,7 @@ void InterFace::outputMsg(const std::string& message, const std::string& color, 
     if(!append) {
         clearWin(output_);
         outputStep_ = 1;
-    }
-    else {
+    } else {
         outputStep_ = getcury(output_) + 1; 
         // std::cout << outputStep_ << std::endl;
         if (outputStep_ == outputY_) {

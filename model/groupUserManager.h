@@ -7,13 +7,16 @@
 #include <string>
 #include <memory>
 #include <burger/db/DB.h>
+#include <burger/base/Config.h>
+
+using namespace burger;
+using namespace burger::db;
 
 // 对群组表的操作
 class GroupUserManager
 {
 public:
-    GroupUserManager(std::string host = "127.0.0.1", std::string user = "root",
-                    std::string passwd = "PWD", std::string dbname = "burgerChat");
+    GroupUserManager();
     ~GroupUserManager()= default;
 
     bool add(GroupUser& groupUser);

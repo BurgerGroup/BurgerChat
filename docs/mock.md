@@ -12,6 +12,10 @@ UPDATE User SET state='offline' WHERE id=3;
 
 desc OfflineMsg;
 
+delete from User where password = 'sgwf'
+
+
+
 ## 测试注册
 
 {"msgid":4, "name":"yyy", "password":"123123"}

@@ -24,8 +24,7 @@ ChatClient::ChatClient(EventLoop* loop, const InetAddress& serverAddr)
     // idMsgHandlerMap_.insert({GROUP_CHAT_MSG, std::bind(&ChatClient::groupChat, this, _1)});
 }
 
-ChatClient::~ChatClient() 
-{
+ChatClient::~ChatClient()  {
     interactiveThread_.join();
 }
 
@@ -36,13 +35,11 @@ void ChatClient::start() {
 
 void ChatClient::onConnection(const TcpConnectionPtr& conn) {
     if(conn->isConnected()) {
-        {   
-            std::lock_guard<std::mutex> lock(mutex_);
-            connection_ = conn;
-        }
+        // need to lock here?
+        connection_ = conn;
         interactiveThread_ = std::thread(std::bind(&WinManager::start, std::ref(winManager_)));
     } else {
-        std::lock_guard<std::mutex> lock(mutex_);
+        // need lock here?
         connection_.reset();
     }
 }
@@ -56,14 +53,13 @@ void ChatClient::handleMessage(const std::string& msg) {
     json response = json::parse(msg);
     std::string parsedMsg;
     int msgid = response["msgid"].get<int>();
-    if(msgid == ONE_CHAT_MSG) {
+    if(msgid == ONE_CHAT_MSG) {   // 聊天消息  
         parsedMsg += response["from"];
         parsedMsg += " says: ";
         outputMsg(parsedMsg);
         parsedMsg = response["msg"];
         outputMsg(parsedMsg, "YELLOW", true);
-    }
-    else {
+    } else {
         auto it = idMsgHandlerMap_.find(msgid);
         if (it == idMsgHandlerMap_.end()) {  // not find
             outputMsg("Received Unknown type of Message!");

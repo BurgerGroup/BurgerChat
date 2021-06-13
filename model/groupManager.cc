@@ -1,11 +1,10 @@
 #include "groupManager.h"
-using namespace burger::db;
-GroupManager::GroupManager(std::string host, std::string user,
-                    std::string passwd, std::string dbname) {
-    params_["host"] = host;
-    params_["user"] = user;
-    params_["passwd"] = passwd;
-    params_["dbname"] = dbname;
+
+GroupManager::GroupManager() {
+    params_["host"] = Config::Instance().getString("mysql", "host", "127.0.0.1");
+    params_["user"] = Config::Instance().getString("mysql", "user", "root");
+    params_["passwd"] = Config::Instance().getString("mysql", "password", "PWD");
+    params_["dbname"] = Config::Instance().getString("mysql", "dbname", "burgerChat");
 }
 
 bool GroupManager::add(Group &group) {

@@ -6,14 +6,14 @@
 #include <string>
 #include <memory>
 #include <burger/db/DB.h>
+#include <burger/base/Config.h>
 
 using namespace burger;
 using namespace burger::db;
 
 class FriendManager {
 public:
-    FriendManager(std::string host = "127.0.0.1", std::string user = "root",
-                    std::string passwd = "PWD", std::string dbname = "burgerChat");
+    FriendManager();
     ~FriendManager() = default;
 
     bool addFriendship(UserId smaller_id, UserId greater_id);

@@ -1,12 +1,11 @@
 #include "offlineNotificationManager.h"
 
 
-OfflineNotificationManager::OfflineNotificationManager(std::string host, std::string user,
-                    std::string passwd, std::string dbname) {
-    params_["host"] = host;
-    params_["user"] = user;
-    params_["passwd"] = passwd;
-    params_["dbname"] = dbname;
+OfflineNotificationManager::OfflineNotificationManager() {
+    params_["host"] = Config::Instance().getString("mysql", "host", "127.0.0.1");
+    params_["user"] = Config::Instance().getString("mysql", "user", "root");
+    params_["passwd"] = Config::Instance().getString("mysql", "password", "PWD");
+    params_["dbname"] = Config::Instance().getString("mysql", "dbname", "burgerChat");
 }
 
 void OfflineNotificationManager::add(UserId userid, UserId fromid, uint64_t recvTime, 

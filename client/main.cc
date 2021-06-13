@@ -11,7 +11,7 @@ int main() {
     InetAddress serverAddr("127.0.0.1", 8888);
 
     EventLoop loop;
-    ChatClient client(&loop, serverAddr); // todo : 这里要用startLoop -- 不然主线程一直在loop
+    ChatClient client(&loop, serverAddr); 
 
     // EventLoopThread loopThread;
     // ChatClient client(loopThread.startLoop(), serverAddr);

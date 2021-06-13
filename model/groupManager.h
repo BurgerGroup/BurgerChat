@@ -6,12 +6,15 @@
 #include <string>
 #include <memory>
 #include <burger/db/DB.h>
+#include <burger/base/Config.h>
+
+using namespace burger::db;
+using namespace burger;
 
 // 对群组表的操作
 class GroupManager {
 public:
-    GroupManager(std::string host = "127.0.0.1", std::string user = "root",
-                    std::string passwd = "PWD", std::string dbname = "burgerChat");
+    GroupManager();
     ~GroupManager()= default;
 
     bool add(Group &group);

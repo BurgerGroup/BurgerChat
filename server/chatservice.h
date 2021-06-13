@@ -62,7 +62,9 @@ private:
     // std::unordered_map<MsgType, MsgHandler, std::hash<int> > idMsgHandlerMap_;
     std::unordered_map<int, MsgHandler> idMsgHandlerMap_;
     // 在线用户的通信连接，我们需要长连接
-    std::unordered_map<UserId, CoTcpConnection::ptr> idUserConnMap_;
+    std::unordered_map<UserId, CoTcpConnection::ptr> idConnMap_;
+    std::unordered_map<CoTcpConnection::ptr, UserId> connIdMap_;  // 反向映射，空间换时间
+
     std::mutex mutex_;
 };
 

@@ -1,13 +1,15 @@
 #include "winManager.h"
 #include "chatClient.h"
 #include <burger/base/Log.h>
+#include <boost/lexical_cast.hpp>  
+
 #include "cmdLine.h"
 #include "color.h"
 
 WinManager::WinManager(ChatClient* chatClient)
     : chatClient_(chatClient),
       interface_(util::make_unique<InterFace>()),
-      quit_(false)  {
+      quit_(false) {
     DEBUG("WinManager ctor.");
     interface_->runHeader();
     interface_->runInput();
@@ -21,13 +23,18 @@ WinManager::~WinManager() {
 void WinManager::start() {
     int notifyTimes = 0;
     while(!quit_) {
+        // 如果还没登录
         if(chatClient_->logInState_ == ChatClient::LogInState::kNotLoggedIn) {
             interface_->changeHeader();
             outputMsg(">> Enter Your Choice: 1. login 2. signup 3. exit");
 
             std::string input = getInput();
-            int choice = atoi(input.c_str());
-            // todo : 解决缓冲区问题
+            int choice = 0;
+            try {  
+                choice = boost::lexical_cast<int>(input);  
+            } catch(boost::bad_lexical_cast& e) {  
+                ERROR("{}", e.what());
+            }
             switch (choice) {
                 case 1: {
                     login();
@@ -50,8 +57,8 @@ void WinManager::start() {
                     break;
                 }
             }
-        }
-        else if(chatClient_->logInState_ == ChatClient::LogInState::kLogging) {
+        } else if(chatClient_->logInState_ == ChatClient::LogInState::kLogging) {
+            // 登录界面
             // TODO : 改成condition_variable
             if(notifyTimes < 1) {    // TODO: 如果一直都是在Logging没有返回怎么处理？
                 outputMsg(">> Logging IN/OUT.....Please Wait......");

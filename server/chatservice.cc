@@ -35,7 +35,8 @@ void ChatService::login(const CoTcpConnection::ptr &conn, json &js, Timestamp ti
                 // STL 都未考虑线程安全， onMessage在多线程环境中
                 // 登录成功，记录用户连接信息
                 std::lock_guard<std::mutex> lock(mutex_);
-                idUserConnMap_.insert({id, conn});
+                idConnMap_.insert({id, conn});
+                connIdMap_.insert({conn, id});
             }
             // 登录成功，更新用户状态信息 state offline=>online
             user.setState("online");
@@ -89,14 +90,17 @@ void ChatService::login(const CoTcpConnection::ptr &conn, json &js, Timestamp ti
             response["errmsg"] = "ID doese't exist ";
         } else {   // 密码错误
             response["errno"] = 3;
-            response["errmsg"] = "Password is wrong "s;
+            response["errmsg"] = "Password is wrong ";
         }
         response["msgid"] = LOGIN_MSG_ACK;
         conn->send(response.dump());
     }
 }
 
-// 处理注册业务，
+// 处理注册业务
+// errno
+// 0 : success
+// 1 : faileds
 void ChatService::reg(const CoTcpConnection::ptr &conn, json &js, Timestamp time) {
     std::string name = js["name"];
     std::string pwd = js["password"];
@@ -123,11 +127,12 @@ void ChatService::reg(const CoTcpConnection::ptr &conn, json &js, Timestamp time
 
 void ChatService::oneChat(const CoTcpConnection::ptr &conn, json &js, Timestamp time) {
     UserId toid = js["to"].get<UserId>();
-    // std::cout << "TOid: "<< toid << std::endl; // for test
+    // fromid ? 
+    TRACE("send msg to {}", toid);
     {
         std::lock_guard<std::mutex> lock(mutex_);
-        auto it = idUserConnMap_.find(toid);
-        if(it != idUserConnMap_.end()) {
+        auto it = idConnMap_.find(toid);
+        if(it != idConnMap_.end()) {
             // toid在线，转发消息   服务器主动推送消息给toid用户(中转)
             // std::cout << js.dump() << std::endl; // for test
             it->second->send(std::move(js.dump()));
@@ -171,8 +176,8 @@ void ChatService::addFriend(const CoTcpConnection::ptr &conn, json &js, Timestam
 
     {
         std::lock_guard<std::mutex> lock(mutex_);
-        if(idUserConnMap_.find(toid) != idUserConnMap_.end()) {
-            idUserConnMap_[toid]->send(std::move(js.dump()));
+        if(idConnMap_.find(toid) != idConnMap_.end()) {
+            idConnMap_[toid]->send(std::move(js.dump()));
             return;
         }
     }
@@ -196,8 +201,8 @@ void ChatService::groupChat(const CoTcpConnection::ptr &conn, json &js, Timestam
 }
 
 void ChatService::logout(const CoTcpConnection::ptr &conn, json &js, Timestamp time) {
-    INFO("LOGOUT");
     UserId id = js["id"].get<UserId>();
+    INFO("{} LOGOUT", id);
     User user = userManager_.query(id);
     assert(user.getState() == "online");
 
@@ -214,13 +219,11 @@ void ChatService::clientCloseException(const CoTcpConnection::ptr &conn)  {
     User user;
     {
         std::lock_guard<std::mutex> lock(mutex_);
-        for (auto it = idUserConnMap_.begin(); it != idUserConnMap_.end(); ++it) {
-            if (it->second == conn) {
-                // 从map表删除用户的链接信息
-                user.setId(it->first);
-                idUserConnMap_.erase(it);
-                break;
-            }
+        if(connIdMap_.count(conn) > 0) {
+            UserId id = connIdMap_[conn];
+            user.setId(id);
+            connIdMap_.erase(conn);
+            idConnMap_.erase(id);
         }
     }
     // 更新用户的状态信息
@@ -228,7 +231,6 @@ void ChatService::clientCloseException(const CoTcpConnection::ptr &conn)  {
         user.setState("offline");
         userManager_.updateState(user);
     }
-    
 }
 
 // 服务器异常，业务重置方法

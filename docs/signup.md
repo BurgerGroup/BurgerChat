@@ -71,4 +71,6 @@ private:
 
 {"msgid":4, "name":"yyy", "password":"123123"}
 
-我们可以看到msgid = 4,
+我们可以看到msgid = 4, 查找对应的是REG_MSG，对应ChatService::reg
+
+

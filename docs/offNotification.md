@@ -1,18 +1,17 @@
-#ifndef OFFLINENOTIFICATIONMANAGER_H
-#define OFFLINENOTIFICATIONMANAGER_H
+## 离线提醒
 
-#include <string>
-#include <vector>
-#include <map>
-#include <burger/base/Timestamp.h>
-#include <burger/db/DB.h>
-#include <burger/base/Config.h>
+```sql
+CREATE table OfflineNotification(
+    userid BIGINT NOT NULL,
+    fromid BIGINT NOT NULL,
+    recvTime BIGINT NOT NULL,
+    fromType ENUM('user', 'group') DEFAULT 'user',
+    message VARCHAR(500) NOT NULL,
+    PRIMARY KEY(userid, fromid, fromType, recvTime)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+```
 
-using namespace burger;
-using namespace burger::db;
-
-using UserId = int64_t;
-
+```cpp
 
 class OfflineNotificationManager {
 public:
@@ -30,5 +29,4 @@ private:
     std::map<std::string, std::string> params_;
 };
 
-
-#endif // OFFLINENOTIFICATIONMANAGER_H
+```

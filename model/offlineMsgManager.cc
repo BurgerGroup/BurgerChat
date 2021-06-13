@@ -1,45 +1,45 @@
 #include "offlineMsgManager.h"
 
-
-OfflineMsgManager::OfflineMsgManager(std::string host, std::string user,
-                    std::string passwd, std::string dbname) {
-    params_["host"] = host;
-    params_["user"] = user;
-    params_["passwd"] = passwd;
-    params_["dbname"] = dbname;
+OfflineMsgManager::OfflineMsgManager() {
+    params_["host"] = Config::Instance().getString("mysql", "host", "127.0.0.1");
+    params_["user"] = Config::Instance().getString("mysql", "user", "root");
+    params_["passwd"] = Config::Instance().getString("mysql", "password", "PWD");
+    params_["dbname"] = Config::Instance().getString("mysql", "dbname", "burgerChat");
 }
 
-void OfflineMsgManager::add(UserId userid, std::string msg) {
+bool OfflineMsgManager::add(UserId userid, std::string msg) {
     MySQL::ptr mysql = std::make_shared<MySQL>(params_);
     mysql->connect();
     std::string sql =  "insert into OfflineMsg (userid, message) values(?, ?)";
     auto stmt = mysql->prepare(sql);
     if(!stmt) {
         ERROR("stmt = {} errno = {} errstr = {}", sql, mysql->getErrno(), mysql->getErrStr());
-        return;
+        return false;
     }
     stmt->bind(1, userid);
     stmt->bind(2, msg);
     if(stmt->execute()) {
         ERROR("stmt = {} errno = {} errstr = {}", sql, mysql->getErrno(), mysql->getErrStr());
-        return;
+        return false;
     }
+    return true;
 }
 
-void OfflineMsgManager::remove(UserId userid) {
+bool OfflineMsgManager::remove(UserId userid) {
     MySQL::ptr mysql = std::make_shared<MySQL>(params_);
     mysql->connect();
     std::string sql =  "delete from OfflineMsg where userid=?";
     auto stmt = mysql->prepare(sql);
     if(!stmt) {
         ERROR("stmt = {} errno = {} errstr = {}", sql, mysql->getErrno(), mysql->getErrStr());
-        return ;
+        return false;
     }
     stmt->bind(1, userid);
     if(stmt->execute()) {
         ERROR("stmt = {} errno = {} errstr = {}", sql, mysql->getErrno(), mysql->getErrStr());
-        return;
+        return false;
     } 
+    return true;
 }
 
 // todo: efficient?
@@ -53,7 +53,6 @@ std::vector<std::string> OfflineMsgManager::query(UserId userid) {
         ERROR("stmt = {} errno = {} errstr = {}", sql, mysql->getErrno(), mysql->getErrStr());
         return vec;
     }
-
     stmt->bind(1, userid);
     auto stmtRes = stmt->query();
     while(stmtRes->next()) {

@@ -7,4 +7,5 @@ enum addFriendRequestState {
     kRefuse, 
     kPending
 };
+
 #endif // ADDFRIEND_H

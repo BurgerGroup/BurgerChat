@@ -1,17 +1,14 @@
-#ifndef OFFLINEMSGMANAGER_H
-#define OFFLINEMSGMANAGER_H
+## 离线消息
 
-#include <string>
-#include <vector>
-#include <map>
-#include <burger/db/DB.h>
-#include <burger/base/Config.h>
+```sql
+CREATE table OfflineMsg(
+    userid BIGINT NOT NULL,
+    message VARCHAR(500) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-using namespace burger;
-using namespace burger::db;
+```
 
-using UserId = int64_t;
-
+```cpp
 class OfflineMsgManager {
 public:
     OfflineMsgManager();
@@ -23,5 +20,8 @@ private:
     std::map<std::string, std::string> params_;
 };
 
+```
 
-#endif // OFFLINEMSGMANAGER_H
+
+
+
