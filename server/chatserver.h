@@ -1,8 +1,9 @@
 #ifndef CHATSERVER_H
 #define CHATSERVER_H
 
-#include <burger/net/TcpServer.h>
-#include <burger/net/EventLoop.h>
+#include <burger/net/CoTcpServer.h>
+#include <burger/net/Scheduler.h>
+#include <burger/net/Buffer.h>
 #include <functional>
 #include <string>
 
@@ -11,22 +12,16 @@ using namespace burger::net;
 
 class ChatServer {
 public:
-    ChatServer(EventLoop *loop,
+    ChatServer(Scheduler *sched,
                const InetAddress &listenAddr,
                const std::string &name);
     void start();
 private:
-    void onConnection(const TcpConnectionPtr&);
+    void connHandler(const CoTcpConnection::ptr& conn);
 
-    void onMessage(const TcpConnectionPtr&,
-                   IBuffer&,
-                   Timestamp);
 private:
-    TcpServer server_; 
-    EventLoop *loop_;  
+    CoTcpServer server_; 
+    Scheduler *sched_;  
 };
-
-
-
 
 #endif // CHATSERVER_H

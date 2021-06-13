@@ -7,7 +7,7 @@
 using namespace burger;
 using namespace burger::db;
 
-UserManager um("127.0.0.1", "root", "123");
+UserManager um;
 GroupManager gm("127.0.0.1", "root", "123");
 GroupUserManager gum("127.0.0.1", "root", "123");
 

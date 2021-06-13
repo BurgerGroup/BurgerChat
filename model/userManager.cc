@@ -1,13 +1,14 @@
 #include "userManager.h"
 
 // todo : 优化 ：抽个类出来
+using namespace burger;
 using namespace burger::db;
-UserManager::UserManager(std::string host, std::string user,
-                    std::string passwd, std::string dbname) {
-    params_["host"] = host;
-    params_["user"] = user;
-    params_["passwd"] = passwd;
-    params_["dbname"] = dbname;
+
+UserManager::UserManager() {
+    params_["host"] = Config::Instance().getString("mysql", "host", "127.0.0.1");
+    params_["user"] = Config::Instance().getString("mysql", "user", "root");
+    params_["passwd"] = Config::Instance().getString("mysql", "password", "PWD");
+    params_["dbname"] = Config::Instance().getString("mysql", "burgerChat");
 }
 
 bool UserManager::add(User &user)  {

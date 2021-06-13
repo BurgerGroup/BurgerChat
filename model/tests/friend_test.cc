@@ -7,7 +7,7 @@
 using namespace burger;
 using namespace burger::db;
 
-UserManager um("127.0.0.1", "root", "PWD");
+UserManager um;
 FriendManager fm("127.0.0.1", "root", "PWD");
 
 void test_friend_add() {

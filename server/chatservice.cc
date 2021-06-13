@@ -9,8 +9,13 @@ ChatService& ChatService::getInstance() {
     return service;
 }
 
-// id pwd pwd
-void ChatService::login(const TcpConnectionPtr &conn, json &js, Timestamp time) {
+// id password
+// errno 
+// 0. 成功
+// 1. 重复登录 This account is using, input another!
+// 2. User id 不存在
+// 3. 密码不正确
+void ChatService::login(const CoTcpConnection::ptr &conn, json &js, Timestamp time) {
     UserId id = js["id"].get<UserId>();
     std::string pwd = js["password"];
     User user = userManager_.query(id);
@@ -21,8 +26,8 @@ void ChatService::login(const TcpConnectionPtr &conn, json &js, Timestamp time) 
             // todo 把挤下线的功能
             json response;
             response["msgid"] = LOGIN_MSG_ACK;
-            response["errno"] = 2;
-            response["errmsg"] = "this account is using, input another!";
+            response["errno"] = 1;
+            response["errmsg"] = "This account is using, input another!";
             conn->send(response.dump());
         } else {
             // login successfully
@@ -47,6 +52,7 @@ void ChatService::login(const TcpConnectionPtr &conn, json &js, Timestamp time) 
             if(!offlineMsgList.empty()) {
                 response["offlinemsg"] = offlineMsgList;
                 // 读取该用户的离线消息后，把该用户的所有离线消息删除掉
+                // todo : mysql操作需要上锁吗
                 offlineMsgManager_.remove(id);
             }
 
@@ -74,19 +80,24 @@ void ChatService::login(const TcpConnectionPtr &conn, json &js, Timestamp time) 
             conn->send(response.dump());
         }
     } else {
-        std::cout << user.getId() <<  " " << user.getPwd() << std::endl; // for test
-        // login failed , 该用户不存在，用户存在但是密码错误
-        // todo : 这里可以做的更细致
+        ERROR("ID : {}, password : {} ", user.getId(), user.getPwd());
+        // login failed 
+        // 用户id不存在
         json response;
+        if(user.getId() != id) {
+            response["errno"] = 2;
+            response["errmsg"] = "ID doese't exist ";
+        } else {   // 密码错误
+            response["errno"] = 3;
+            response["errmsg"] = "Password is wrong "s;
+        }
         response["msgid"] = LOGIN_MSG_ACK;
-        response["errno"] = 1;
-        response["errmsg"] = "id or password is invalid!";
         conn->send(response.dump());
     }
 }
 
 // 处理注册业务，
-void ChatService::reg(const TcpConnectionPtr &conn, json &js, Timestamp time) {
+void ChatService::reg(const CoTcpConnection::ptr &conn, json &js, Timestamp time) {
     std::string name = js["name"];
     std::string pwd = js["password"];
     User user;
@@ -110,7 +121,7 @@ void ChatService::reg(const TcpConnectionPtr &conn, json &js, Timestamp time) {
     }
 }
 
-void ChatService::oneChat(const TcpConnectionPtr &conn, json &js, Timestamp time) {
+void ChatService::oneChat(const CoTcpConnection::ptr &conn, json &js, Timestamp time) {
     UserId toid = js["to"].get<UserId>();
     // std::cout << "TOid: "<< toid << std::endl; // for test
     {
@@ -128,7 +139,7 @@ void ChatService::oneChat(const TcpConnectionPtr &conn, json &js, Timestamp time
 }
 
 
-void ChatService::addFriend(const TcpConnectionPtr &conn, json &js, Timestamp time) {
+void ChatService::addFriend(const CoTcpConnection::ptr &conn, json &js, Timestamp time) {
     UserId userid = js["id"].get<UserId>();  // 提出好友申请的/收到好友回复的
     UserId friendid = js["friendid"].get<UserId>();  // 收到好友申请的人/发出好友回复的
     addFriendRequestState state;
@@ -172,19 +183,19 @@ void ChatService::addFriend(const TcpConnectionPtr &conn, json &js, Timestamp ti
     }
 }
 
-void ChatService::createGroup(const TcpConnectionPtr &conn, json &js, Timestamp time) {
+void ChatService::createGroup(const CoTcpConnection::ptr &conn, json &js, Timestamp time) {
     INFO("create group");
 }
 
-void ChatService::addGroup(const TcpConnectionPtr &conn, json &js, Timestamp time) {
+void ChatService::addGroup(const CoTcpConnection::ptr &conn, json &js, Timestamp time) {
     INFO("add group");
 }
 
-void ChatService::groupChat(const TcpConnectionPtr &conn, json &js, Timestamp time) {
+void ChatService::groupChat(const CoTcpConnection::ptr &conn, json &js, Timestamp time) {
     INFO("group chat");
 }
 
-void ChatService::logout(const TcpConnectionPtr &conn, json &js, Timestamp time) {
+void ChatService::logout(const CoTcpConnection::ptr &conn, json &js, Timestamp time) {
     INFO("LOGOUT");
     UserId id = js["id"].get<UserId>();
     User user = userManager_.query(id);
@@ -199,7 +210,7 @@ void ChatService::logout(const TcpConnectionPtr &conn, json &js, Timestamp time)
     conn->send(response.dump());
 }
 
-void ChatService::clientCloseException(const TcpConnectionPtr &conn)  {
+void ChatService::clientCloseException(const CoTcpConnection::ptr &conn)  {
     User user;
     {
         std::lock_guard<std::mutex> lock(mutex_);
@@ -232,7 +243,7 @@ MsgHandler ChatService::getHandler(int msgid) {
     auto it = idMsgHandlerMap_.find(msgid);
     if (it == idMsgHandlerMap_.end()) {  // not find
         // 返回一个默认的处理器，空操作 --> 以免直接报错NULL操作 非法退出
-        return [=](const TcpConnectionPtr &conn, json &js, Timestamp) {
+        return [=](const CoTcpConnection::ptr &conn, json &js, Timestamp) {
             ERROR("msgid : {} can't find handler", msgid);
         };
     } else {

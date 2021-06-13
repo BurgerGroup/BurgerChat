@@ -13,26 +13,28 @@ BurgerChat : c++ terminal IM based on Burger, ncurses, redis and nginx
 
 -----
 
-## Features:
-- Network IO is based on the burger library
-- Clean and easy to read c++ 
-- Use burger's mysql wrapper api
-- Interacting with objects and databases through the orm schema
-- redis : Cluster Communication
-- nginx : load balance
+## ✨ 项目介绍
 
-## Compile
+一个基于ncurses和Burger的terminal通讯软件，主要业务分为注册、登录、加好友、查看离线消息、一对一聊天等
+
+todo: 业务流程图
+
+## ⌛️ 构建
 
 ```
-$ sudo apt install g++ cmake make libboost-dev mysql-server libmysqlclient-dev
+$ sudo apt install g++ cmake make libboost-all-dev mysql-server libmysqlclient-dev libcurl4-openssl-dev 
+ 
+$ git clone https://github.com/BurgerGroup/BurgerChat.git
 
-$ git clone https://github.com/chanchann/BurgerChat.git
+$ cd Burger
 
-$ cd BurgerChat
-
-$ mkdir build && cd build
-
-$ cmake ..
+$ mkdir build && cmake ..
 
 $ make 
+
+$ make install   
 ```
+
+## 🥇 业务流程
+
+### 注册业务 []
