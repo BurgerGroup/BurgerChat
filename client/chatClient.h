@@ -14,6 +14,7 @@
 #include "msg.h"
 #include "winManager.h"
 #include "info.h"
+#include "type.h"
 
 using json = nlohmann::json;
 using namespace burger;
@@ -55,7 +56,7 @@ private:
     void loginAck(const json& response);
     void logoutAck(const json& response);
     void addFriendAck(const json& response);
-    void outputMsg(const std::string& msg, const std::string& color = "GREEN", bool append = false) { winManager_->outputMsg(msg, color, append); }
+    void outputMsg(const std::string& msg, bool append = false, const std::string& color = "GREEN") { winManager_->outputMsg(msg, append, color); }
 
 private:
     EventLoop* loop_;
@@ -65,7 +66,7 @@ private:
     TcpConnectionPtr connection_;
     std::unique_ptr<WinManager> winManager_;
     std::thread interactiveThread_;
-    std::shared_ptr<Info> info_;
+    std::shared_ptr<Info> info_;  // todo : 理一下这里是否可以unique_ptr
     std::unordered_map<int, MsgHandler> idMsgHandlerMap_;
     std::queue<json> friendRequests_;
 };

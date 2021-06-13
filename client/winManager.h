@@ -18,7 +18,7 @@ public:
     void signup();
     void login();
     void mainMenu();
-    void outputMsg(const std::string& msg, const std::string& color = "GREEN", bool append = false) { interface_->outputMsg(msg, color, append); }
+    void outputMsg(const std::string& msg,  bool append = false, const std::string& color = "GREEN") { interface_->outputMsg(msg, append, color); }
     void clearOutPut() { interface_->clearWin(interface_->output_); }
     std::string getInput() { return interface_->getInput(); }
     void quit() { quit_ = true; }

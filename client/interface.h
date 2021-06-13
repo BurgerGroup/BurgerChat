@@ -26,7 +26,7 @@ public:
     // 消息输出框绘制
     void runOutput();
 
-    void outputMsg(const std::string& message, const std::string& color = "GREEN", bool append = false);
+    void outputMsg(const std::string& message, bool append = false, const std::string& color = "GREEN");
     std::string getInput();
 
     void changeHeader(const std::string& message = "Welcome To BurgetChat!", const std::string& color = "GREEN");

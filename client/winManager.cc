@@ -73,18 +73,32 @@ void WinManager::start() {
 }
 
 void WinManager::signup() {
-    outputMsg(">> Sign Up ");
-    outputMsg(">> Username");    // todo: 此处增加判断名字合法否
+    interface_->changeHeader("Sign Up");
+    outputMsg(">> Username");    
     std::string name = getInput();  // todo : 此处用sstream是否更好
-    outputMsg(">> Password");
+    // check name validation
+    if(name.size() <= 2 || name.size() > 20) {
+        outputMsg("\n Name is invalid, You must input 3 to 20 characters");
+        outputMsg("Please enter any key to continue", true);
+        std::cin.get();
+        signup();
+    }
+    outputMsg(">> Password");   // todo : 如何变成密文
     std::string pwd = getInput();
-
+    // check password validation
+    // todo : 更加细化密码检查
+    if(pwd.size() <= 2 || pwd.size() > 20) {
+        outputMsg("\n Password is invalid, You must input 3 to 20 characters");
+        outputMsg("Please enter any key to continue", true);
+        std::cin.get();
+        signup();
+    }
     json js;
     js["msgid"] = REG_MSG;
     js["name"] = name;
     js["password"] = pwd;
     std::string request = js.dump();
-    // std::cout << request << std::endl; // for test
+    TRACE("request : {}", request);
     chatClient_->send(request);
 }
 

@@ -1,8 +1,10 @@
 #include "interface.h"
 #include <burger/base/Log.h>
 
+// https://blog.csdn.net/qq_30534935/article/details/97616632
+
 InterFace::InterFace() {
-    initscr();
+    initscr();  // 初始化curses窗口
     if(has_colors() == FALSE) {
         printf("you terminal does not support color\n");
     }
@@ -15,7 +17,7 @@ InterFace::InterFace() {
     colors_["GREEN"] = 1;
     colors_["RED"] = 2;
     colors_["YELLOW"] = 3;
-    curs_set(0);
+    curs_set(0);  // 这个函数用来设制光标是否可见。它的参数可以是：0（不可见），1（可见），2（完全可见）
 }
 
 InterFace::~InterFace() {
@@ -28,7 +30,6 @@ InterFace::~InterFace() {
 }
 
 void InterFace::runHeader() {
-    int y, x;
     createHeader();
     Refresh(header_);
     changeHeader();
@@ -75,7 +76,7 @@ void InterFace::changeHeader(const std::string& message, const std::string& colo
 }
 
 
-void InterFace::outputMsg(const std::string& message, const std::string& color, bool append) {
+void InterFace::outputMsg(const std::string& message, bool append, const std::string& color) {
     // 处理输出框内文字格式，防止超出边界
     if(!append) {
         clearWin(output_);

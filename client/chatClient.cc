@@ -9,10 +9,11 @@ ChatClient::ChatClient(EventLoop* loop, const InetAddress& serverAddr)
     client_(loop, serverAddr, "ChatClient"),
     logInState_(kNotLoggedIn),
     winManager_(util::make_unique<WinManager>(this)),
-    info_(util::make_unique<Info>()) {
+    info_(std::make_shared<Info>()) {
     client_.setConnectionCallback(std::bind(&ChatClient::onConnection, this, _1));
     client_.setMessageCallback(std::bind(&ChatClient::onMessage, this, _1, _2, _3));
 
+    // 绑定对应的callback
     idMsgHandlerMap_.insert({LOGIN_MSG_ACK, std::bind(&ChatClient::loginAck, this, _1)});
     idMsgHandlerMap_.insert({LOGOUT_MSG, std::bind(&ChatClient::logoutAck, this, _1)});
     idMsgHandlerMap_.insert({REG_MSG_ACK, std::bind(&ChatClient::signupAck, this, _1)});
@@ -58,7 +59,7 @@ void ChatClient::handleMessage(const std::string& msg) {
         parsedMsg += " says: ";
         outputMsg(parsedMsg);
         parsedMsg = response["msg"];
-        outputMsg(parsedMsg, "YELLOW", true);
+        outputMsg(parsedMsg, true, "YELLOW");
     } else {
         auto it = idMsgHandlerMap_.find(msgid);
         if (it == idMsgHandlerMap_.end()) {  // not find
@@ -85,16 +86,18 @@ void ChatClient::signupAck(const json& response) {
     if (response["errno"].get<int>() != 0) {
         // Sign up failed
         // todo : 错误原因可以再细化一下吗？
-        outputMsg("Register failed!Try again...");
+        outputMsg("Register failed! Enter any key to try again...");
+        std::cin.get();
         winManager_->signup();
-    } 
-    else {
+    } else {
         // Sign up succeed
         std::string msg = "";
         msg += "Sign up success, your user ID is: ";
-        msg += response["id"];
+        msg += std::to_string(response["id"].get<UserId>());
         msg += ", do not forget it!";
         outputMsg(msg);
+        outputMsg("Press a key to continue");
+        std::cin.get();
         winManager_->login();
     }
 }
@@ -171,7 +174,7 @@ void ChatClient::addFriendAck(const json& response) {
             outputMsg("You have a new friend request!!!", "YELLOW");
             std::string msg = std::to_string(friendRequests_.size());
             msg += " request(s) in total.";
-            outputMsg(msg, "YELLOW", true);
+            outputMsg(msg, true, "YELLOW");
         }
         else if(state == kAgree) {
             std::string msg(response["friendid"]);

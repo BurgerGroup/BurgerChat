@@ -32,7 +32,7 @@ void CmdHandler::help(ChatClient* client, const std::string& str) {
     client->outputMsg(">> Show Command List: ");
     for (auto &p : commandMap) {
         std::string msg = p.first + " >>>> " + p.second;
-        client->outputMsg(msg, "GREEN", true);
+        client->outputMsg(msg, true, "GREEN");
     }
 }
 
@@ -127,8 +127,8 @@ void CmdHandler::confirmFriendRequest(ChatClient* client, const std::string&) {
     while(!hasChoosed) {    
         msg = std::to_string(userid) + " (" + name + ")" + " wants to MAKE FRIEND with you!!!";
 
-        client->outputMsg(msg, "YELLOW");
-        client->outputMsg(">> Input : 1.Agree  2.Refuse  3.Handle it later... ", "YELLOW", true);
+        client->outputMsg(msg, false, "YELLOW");
+        client->outputMsg(">> Input : 1.Agree  2.Refuse  3.Handle it later... ", true, "YELLOW");
 
         std::string input = client->winManager_->getInput();
         int choice = atoi(input.c_str());
