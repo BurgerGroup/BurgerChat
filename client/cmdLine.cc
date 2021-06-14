@@ -2,6 +2,12 @@
 #include "chatClient.h"
 #include "color.h"
 
+// todo : 增加命令行参数
+// 比如 add 默认添加还好友
+// add -g 添加group
+// ls 显示在线好友
+// ls -a 显示所有好友
+
 std::unordered_map<std::string, std::string> CmdHandler::commandMap = {
     // {"help", "显示所有支持的命令，格式:help"},
     {"help", "Show command list, usage: help"},
@@ -12,7 +18,9 @@ std::unordered_map<std::string, std::string> CmdHandler::commandMap = {
     // {"addgroup", "加入群组，格式:addgroup:groupid"},
     // {"groupchat", "群聊，格式:groupchat:groupid:message"},
     {"logout", "LogOut, usage: logout"},
-    {"clear", "Clear the Output win, usage: clear"}
+    {"clear", "Clear the Output win, usage: clear"},
+    // {"ls", "Show online friend, usage : ls"}, 暂时把ls 查看所有好友
+    {"ls", "Show all friend, usage : ls"}
 };
 
 // 注册系统支持的客户端命令处理
@@ -25,7 +33,8 @@ std::unordered_map<std::string, std::function<void(ChatClient* , const std::stri
     // {"addgroup", CmdHandler::addgroup},
     // {"groupchat", CmdHandler::groupchat},
     {"logout", CmdHandler::logout},
-    {"clear", CmdHandler::clear}
+    {"clear", CmdHandler::clear},
+    {"ls", CmdHandler::showFriendList},
 };
 
 void CmdHandler::help(ChatClient* client, const std::string& str) {
@@ -164,3 +173,4 @@ void CmdHandler::confirmFriendRequest(ChatClient* client, const std::string&) {
 void CmdHandler::clear(ChatClient* client, const std::string&) {
     client->winManager_->clearOutPut();
 }
+

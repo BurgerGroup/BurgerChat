@@ -20,6 +20,7 @@ WinManager::~WinManager() {
     assert(quit_ == true);
 }
 
+// 主逻辑
 void WinManager::start() {
     int notifyTimes = 0;
     while(!quit_) {
@@ -59,13 +60,17 @@ void WinManager::start() {
             }
         } else if(chatClient_->logInState_ == ChatClient::LogInState::kLogging) {
             // 登录界面
-            // TODO : 改成condition_variable
-            if(notifyTimes < 1) {    // TODO: 如果一直都是在Logging没有返回怎么处理？
+            if(notifyTimes < 1) {    
                 outputMsg(">> Logging IN/OUT.....Please Wait......");
                 ++notifyTimes;
+                std::this_thread::sleep_for(std::chrono::seconds(1));
+            } else if(notifyTimes > 10) {
+                outputMsg(">> Timeout, Press any key to go back to start menu......");
+                std::cin.get();
+                notifyTimes= 0;
+                chatClient_->logInState_ == ChatClient::LogInState::kNotLoggedIn;
             }
-        }
-        else {
+        } else {
             notifyTimes = 0;
             mainMenu();
         }

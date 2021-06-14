@@ -144,6 +144,8 @@ void ChatClient::loginAck(const json& response) {
                 handleMessage(msg);
             }
         }
+        
+
     }
 }
 
