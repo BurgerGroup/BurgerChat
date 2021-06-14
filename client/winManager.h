@@ -7,6 +7,8 @@
 #include "interface.h"
 #include <memory>
 #include <string>
+#include <burger/base/StringUtil.h>
+
 using json = nlohmann::json;
 
 class ChatClient;

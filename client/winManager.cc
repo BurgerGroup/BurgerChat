@@ -60,15 +60,15 @@ void WinManager::start() {
             }
         } else if(chatClient_->logInState_ == ChatClient::LogInState::kLogging) {
             // 登录界面
-            if(notifyTimes < 1) {    
+            if(notifyTimes < 10) {    
                 outputMsg(">> Logging IN/OUT.....Please Wait......");
                 ++notifyTimes;
                 std::this_thread::sleep_for(std::chrono::seconds(1));
-            } else if(notifyTimes > 10) {
+            } else {
                 outputMsg(">> Timeout, Press any key to go back to start menu......");
                 std::cin.get();
                 notifyTimes= 0;
-                chatClient_->logInState_ == ChatClient::LogInState::kNotLoggedIn;
+                chatClient_->logInState_ = ChatClient::LogInState::kNotLoggedIn;
             }
         } else {
             notifyTimes = 0;
@@ -150,30 +150,38 @@ void WinManager::login() {
     chatClient_->send(request);
 }
 
+// command need more tests
 void WinManager::mainMenu() {
-    interface_->changeHeader("Enter Your Choice (Enter 'help' to get help)");
+    interface_->changeHeader("Main Menu (Enter 'help' to get help)");
     while(chatClient_->logInState_ == ChatClient::kLoggedIn) {
 
         std::string input = getInput();
         std::string action;
-        std::string content;
+        std::string flag = "";
+        std::string content = "";
         
-        size_t end = input.find(':');
-        if(end == input.npos) {
-            action = input;
-        }
-        else {
-            action = input.substr(0, end);
-            content = input.substr(end + 1, input.size() - end);
-        }   
-
+        std::vector<std::string> args;
+        StringUtil::split(input, args);
+        if(args.size() < 1) {
+            continue;
+        } else {
+            // more eff?
+            if(args.size() > 1) {
+                if(args[1].size() > 0 && args[1][0] == '-') {
+                    flag = args[1];
+                    if(args.size() > 2) content = args[2];
+                } else {
+                    content = args[1];
+                } 
+            }
+            
+        } 
+        action = args[0];
         if(CmdHandler::commandMap.find(action) == CmdHandler::commandMap.end()) {
            outputMsg(">> Invalid input!!!!", "RED"); 
-            
-        }
-        else {
+        } else {
             auto func = CmdHandler::commandHandlerMap[action];
-            func(chatClient_, std::move(content));
+            func(chatClient_, flag, content);
         }
     }
 }

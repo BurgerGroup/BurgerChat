@@ -19,6 +19,7 @@ public:
     std::string getName() const { return currentUser_.getName(); }
     std::string getPwd() const { return currentUser_.getPwd(); }
     std::string getState() { return currentUser_.getState(); }
+    const std::unordered_map<UserId, User>& getFriendList() const { return currentUserFriendList_; } 
 
     void setId(UserId id) { currentUser_.setId(id); }
     void setName(const std::string& name) { currentUser_.setName(name); }

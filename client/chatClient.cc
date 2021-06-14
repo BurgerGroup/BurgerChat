@@ -109,8 +109,8 @@ void ChatClient::loginAck(const json& response) {
         winManager_->outputMsg("Login failed!");
         winManager_->outputMsg(errmsg, true);
         winManager_->outputMsg("Press any key to try again...", true);
-        std::cin.get();
         setLogInState_(kNotLoggedIn);
+        std::cin.get();
     } else {
         // Log in succeed
         winManager_->outputMsg("Login success!");
@@ -144,8 +144,6 @@ void ChatClient::loginAck(const json& response) {
                 handleMessage(msg);
             }
         }
-        
-
     }
 }
 

@@ -2,7 +2,7 @@
 #include "chatClient.h"
 #include "color.h"
 
-// todo : 增加命令行参数
+// 命令行参数
 // 比如 add 默认添加还好友
 // add -g 添加group
 // ls 显示在线好友
@@ -24,7 +24,7 @@ std::unordered_map<std::string, std::string> CmdHandler::commandMap = {
 };
 
 // 注册系统支持的客户端命令处理
-std::unordered_map<std::string, std::function<void(ChatClient* , const std::string& )>> CmdHandler::commandHandlerMap = {
+std::unordered_map<std::string, std::function<void(ChatClient* , const std::string&, const std::string&)> > CmdHandler::commandHandlerMap = {
     {"help", CmdHandler::help},
     {"chat", CmdHandler::chat},
     {"addFriend", CmdHandler::addFriend},
@@ -34,10 +34,10 @@ std::unordered_map<std::string, std::function<void(ChatClient* , const std::stri
     // {"groupchat", CmdHandler::groupchat},
     {"logout", CmdHandler::logout},
     {"clear", CmdHandler::clear},
-    {"ls", CmdHandler::showFriendList},
+    {"ls", CmdHandler::showFriendList}
 };
 
-void CmdHandler::help(ChatClient* client, const std::string& str) {
+void CmdHandler::help(ChatClient* client, const std::string& flag, const std::string& str) {
     client->outputMsg(">> Show Command List: ");
     for (auto &p : commandMap) {
         std::string msg = p.first + " >>>> " + p.second;
@@ -45,7 +45,7 @@ void CmdHandler::help(ChatClient* client, const std::string& str) {
     }
 }
 
-void CmdHandler::chat(ChatClient* client, const std::string& msg) {
+void CmdHandler::chat(ChatClient* client, const std::string& flag, const std::string& msg) {
     size_t idx = msg.find(":"); // friendid:message
     if (idx == msg.npos) {
         client->outputMsg(">> Chat Command Invalid!", "RED");
@@ -76,7 +76,7 @@ void CmdHandler::chat(ChatClient* client, const std::string& msg) {
     client->send(std::move(content));
 }
 
-void CmdHandler::logout(ChatClient* client, const std::string& msg) {
+void CmdHandler::logout(ChatClient* client, const std::string& flag, const std::string& msg) {
     assert(client->getLogInState() == ChatClient::kLoggedIn);
     client->setLogInState_(ChatClient::kLogging);
 
@@ -90,7 +90,8 @@ void CmdHandler::logout(ChatClient* client, const std::string& msg) {
     client->send(std::move(content));
 }
 
-void CmdHandler::addFriend(ChatClient* client, const std::string& msg) {
+void CmdHandler::addFriend(ChatClient* client, const std::string& flag, const std::string& msg) {
+    
     UserId friendid = atoi(msg.c_str()); 
 
     // 如果已经是好友，直接返回提示消息即可
@@ -115,7 +116,7 @@ void CmdHandler::addFriend(ChatClient* client, const std::string& msg) {
     client->send(std::move(content));
 }
 
-void CmdHandler::confirmFriendRequest(ChatClient* client, const std::string&) {
+void CmdHandler::confirmFriendRequest(ChatClient* client, const std::string& flag, const std::string&) {
     if(client->friendRequests_.empty()) {
         client->outputMsg(">> You don't have any new friend requests!!!", "YELLOW");
         return;
@@ -170,7 +171,35 @@ void CmdHandler::confirmFriendRequest(ChatClient* client, const std::string&) {
     client->send(std::move(content));
 }
 
-void CmdHandler::clear(ChatClient* client, const std::string&) {
+void CmdHandler::clear(ChatClient* client, const std::string& flag, const std::string&) {
     client->winManager_->clearOutPut();
 }
 
+void CmdHandler::showFriendList(ChatClient* client, const std::string& flag, const std::string&) {
+    if(flag == "-a") {
+        client->outputMsg("Show all friends");
+        showAllFriendList(client);
+    } else if(flag == "-o") {
+        // todo : 暂时都显示全部好友
+        client->outputMsg("Show friends offline(todo)");
+        showAllFriendList(client);
+    } else {
+        client->outputMsg("Show friends online(todo)");
+        showAllFriendList(client);
+    }
+}
+
+void CmdHandler::showAllFriendList(ChatClient* client) {
+    auto friendList = client->getInfo()->getFriendList();
+    int num = 1;
+    std::string friendStr = "";
+    client->outputMsg("num\tUserId\t\tUserName", true);
+    for(auto it = friendList.begin(); it != friendList.end(); it++) {
+        friendStr += std::to_string(num++);
+        friendStr += "\t";
+        friendStr += std::to_string(it->first);
+        friendStr += "\t\t";
+        friendStr += it->second.getName();
+        client->outputMsg(friendStr, true);
+    }
+}
